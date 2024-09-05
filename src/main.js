@@ -1,8 +1,7 @@
-import animateTitle from './features/animateTitle'
-import createBadge from './features/createBasge'
-import './styles/style.css'
+import initializeCalculator from './features/calculator'
+import initializeFormLogic from './features/formLogic'
+import initializeRadioButtons from './features/radiobutts'
 
-console.log('Welcome to Vite + JS + Webflow!')
-
-createBadge()
-animateTitle()
+const calculator = initializeCalculator()
+initializeFormLogic(calculator)
+initializeRadioButtons()
