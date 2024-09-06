@@ -87,6 +87,47 @@ function initializeFormLogic(calculator) {
 
   const maxPages = 9
 
+  let currentPage = 1
+
+  function showPage(pageNumber) {
+    document.querySelectorAll('.f-page').forEach((page, index) => {
+      page.style.display = index + 1 === pageNumber ? 'flex' : 'none'
+    })
+    updateNextButtonState()
+  }
+
+  function updateNextButtonState() {
+    const nextButton = document.getElementById('f-next-button')
+    const currentSwitch = document.getElementById(`p${currentPage}-switch`)
+    const isLastPage = currentPage === maxPages
+
+    nextButton.classList.toggle('in-progress', currentSwitch.checked)
+    nextButton.disabled =
+      isLastPage || (currentSwitch.checked && !isPageValid(currentPage))
+
+    if (isLastPage) {
+      nextButton.style.display = 'none'
+      // Here you can add logic to show a submit button instead
+    } else {
+      nextButton.style.display = 'block'
+    }
+  }
+
+  function isPageValid(pageNumber) {
+    const formFields = document.getElementById(`p${pageNumber}-formfields`)
+    const requiredFields = formFields.querySelectorAll(
+      'input:required, select:required, textarea:required'
+    )
+    return Array.from(requiredFields).every((field) => field.validity.valid)
+  }
+
+  function handleNextButtonClick() {
+    if (currentPage < maxPages) {
+      currentPage++
+      showPage(currentPage)
+    }
+  }
+
   function init() {
     for (let i = 1; i <= maxPages; i++) {
       const switchElement = document.getElementById(`p${i}-switch`)
@@ -123,6 +164,11 @@ function initializeFormLogic(calculator) {
         break
       }
     }
+
+    const nextButton = document.getElementById('f-next-button')
+    nextButton.addEventListener('click', handleNextButtonClick)
+
+    showPage(currentPage)
 
     // Initial calculation
     if (calculator && typeof calculator.recalculate === 'function') {
