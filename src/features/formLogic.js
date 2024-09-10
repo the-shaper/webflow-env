@@ -1,4 +1,7 @@
 function initializeFormLogic(calculator) {
+  let currentPage = 1
+  let maxPages
+
   function handleConditionalGroups(event) {
     if (event.target.type !== 'radio') return
 
@@ -85,32 +88,46 @@ function initializeFormLogic(calculator) {
     toggleFormFields(pageNumber, event.target.checked)
   }
 
-  const maxPages = 9
-
-  let currentPage = 1
-
   function showPage(pageNumber) {
     document.querySelectorAll('.f-page').forEach((page, index) => {
       page.style.display = index + 1 === pageNumber ? 'flex' : 'none'
     })
-    updateNextButtonState()
+    updateButtonStates()
   }
 
-  function updateNextButtonState() {
+  function updateButtonStates() {
     const nextButton = document.getElementById('f-next-button')
+    const prevButton = document.getElementById('f-prev-button')
     const currentSwitch = document.getElementById(`p${currentPage}-switch`)
     const isLastPage = currentPage === maxPages
+    const isFirstPage = currentPage === 1
 
-    nextButton.classList.toggle('in-progress', currentSwitch.checked)
+    // Update next button
     nextButton.disabled =
       isLastPage || (currentSwitch.checked && !isPageValid(currentPage))
+    nextButton.classList.toggle('is-off', isLastPage)
+    nextButton.classList.toggle(
+      'in-progress',
+      currentSwitch.checked && !isLastPage
+    )
 
-    if (isLastPage) {
-      nextButton.style.display = 'none'
-      // Here you can add logic to show a submit button instead
-    } else {
-      nextButton.style.display = 'block'
+    // Update previous button
+    prevButton.disabled = isFirstPage
+    prevButton.classList.toggle('is-off', isFirstPage)
+
+    // Remove 'is-off' class from prevButton when there's a page to go back to
+    if (!isFirstPage) {
+      prevButton.classList.remove('is-off')
     }
+
+    console.log(
+      'Current page:',
+      currentPage,
+      'Is last page:',
+      isLastPage,
+      'Next button classes:',
+      nextButton.classList.toString()
+    )
   }
 
   function isPageValid(pageNumber) {
@@ -125,10 +142,24 @@ function initializeFormLogic(calculator) {
     if (currentPage < maxPages) {
       currentPage++
       showPage(currentPage)
+      updateButtonStates()
+    }
+  }
+
+  function handlePrevButtonClick() {
+    if (currentPage > 1) {
+      currentPage--
+      showPage(currentPage)
+      updateButtonStates() // Added this line
     }
   }
 
   function init() {
+    // Dynamically determine the number of pages
+    const pages = document.querySelectorAll('.f-page')
+    maxPages = pages.length
+    console.log(`Detected ${maxPages} pages`)
+
     for (let i = 1; i <= maxPages; i++) {
       const switchElement = document.getElementById(`p${i}-switch`)
       if (switchElement) {
@@ -166,9 +197,12 @@ function initializeFormLogic(calculator) {
     }
 
     const nextButton = document.getElementById('f-next-button')
+    const prevButton = document.getElementById('f-prev-button')
     nextButton.addEventListener('click', handleNextButtonClick)
+    prevButton.addEventListener('click', handlePrevButtonClick)
 
     showPage(currentPage)
+    updateButtonStates()
 
     // Initial calculation
     if (calculator && typeof calculator.recalculate === 'function') {
