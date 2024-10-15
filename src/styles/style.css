@@ -35,3 +35,10 @@ input[type='date' i] {
 input[type='date']::-webkit-calendar-picker-indicator {
   display: none;
 }
+
+::placeholder {
+  color: var(--OkayWhite);
+  font-family: neue-haas-grotesk-display-light, sans-serif;
+  font-size: 0.8rem;
+  font-weight: 300;
+}

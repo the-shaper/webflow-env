@@ -1,0 +1,18 @@
+- [ ] Agregar conditional visibility para "cuantos fotógrafos"
+- [ ] Agregar conditional visibility para "cuantos videógrafos"
+- [ ] Conectar formulario de contacto a un flujo real
+- [ ] Resolver integración de calendario
+- [ ] Construir sumario basado en selección de servicios
+- [ ]
+- [ ]
+- [ ]
+- [ ]
+- [ ]
+- [ ]
+- [ ]
+- [ ]
+- [ ]
+- [ ]
+- [ ]
+- [ ]
+- [ ]

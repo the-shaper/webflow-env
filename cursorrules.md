@@ -1,0 +1,1 @@
+Note. When giving code suggestions. PLEASE do not edit code other than the one corresponding to our task at hand. PLEASE leave the rest of the code you see untouched. You don't know what I am using and what I'm not, so please, don't mess with code that we're not working with. Understood?

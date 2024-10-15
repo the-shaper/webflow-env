@@ -24,7 +24,11 @@ function initializeCalculator() {
   // Function to calculate the total sum of all form field wrappers
   function calculateTotalSum() {
     let totalSum = 0
-    for (let i = 1; i <= 9; i++) {
+    const pages = document.querySelectorAll('.f-page')
+    const maxPages = pages.length
+
+    for (let i = 1; i < maxPages; i++) {
+      // Note: < instead of <=
       const formFieldWrapperId = `p${i}-formfields`
       const totalPriceElementId = `p${i}-totalprice`
 
