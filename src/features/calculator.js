@@ -13,7 +13,7 @@ function initializeCalculator() {
     let sum = 0
 
     radioGroups.forEach((radio) => {
-      sum += parseFloat(radio.value) || 0
+      sum += parseFloat(radio.dataset.price) || 0
     })
 
     document.getElementById(totalPriceElementId).textContent =
