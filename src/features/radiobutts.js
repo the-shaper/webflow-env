@@ -13,7 +13,26 @@ function initializeRadioButtons() {
       const radioInput = field.querySelector('input[type="radio"]')
       console.log('Radio input found:', radioInput)
 
-      // Add event listener to each radio input
+      // Add event listener to the field instead of the radio input
+      field.addEventListener('click', function (event) {
+        // Prevent the default behavior
+        event.preventDefault()
+
+        // Manually check the radio input
+        radioInput.checked = true
+        console.log(
+          'Radio input checked:',
+          radioInput.checked,
+          'Value:',
+          radioInput.value
+        )
+
+        // Dispatch a change event to trigger the existing logic
+        radioInput.dispatchEvent(new Event('change', { bubbles: true }))
+        console.log('Change event dispatched for:', radioInput.name)
+      })
+
+      // Keep the existing change event listener
       radioInput.addEventListener('change', function () {
         console.log('Radio input changed:', radioInput)
 
@@ -51,6 +70,10 @@ function initializeRadioButtons() {
             })
           }
         })
+
+        // Trigger form validation after radio button change
+        const event = new Event('input', { bubbles: true, cancelable: true })
+        radioInput.dispatchEvent(event)
       })
     })
   }
