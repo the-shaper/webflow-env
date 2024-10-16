@@ -24,6 +24,12 @@ function initializeFormLogic(calculator) {
     allConditionalGroups.forEach((group) => {
       if (groupsToShow.includes(group.id)) {
         group.classList.add('is-active')
+        // Select first option in the newly activated group
+        const firstRadio = group.querySelector('input[type="radio"]')
+        if (firstRadio) {
+          firstRadio.checked = true
+          firstRadio.dispatchEvent(new Event('change', { bubbles: true }))
+        }
       } else {
         group.classList.remove('is-active')
       }

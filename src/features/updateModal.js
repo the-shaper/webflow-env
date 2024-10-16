@@ -1,3 +1,19 @@
+function formatCurrency(number, includeSymbol = true) {
+  const formatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'MXN',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  })
+
+  if (includeSymbol) {
+    return formatter.format(number)
+  } else {
+    // This will format the number with commas but without the currency symbol
+    return formatter.format(number).replace(/^MX\$/, '$')
+  }
+}
+
 function openModal() {
   const modalBackground = document.getElementById('modal-background')
   if (modalBackground) {
@@ -14,8 +30,9 @@ function closeModal() {
 
 function updateModal(maxPages) {
   const modalContent = document.getElementById('modal-content')
-  if (!modalContent) {
-    console.error('Modal content element not found')
+  const priceWrapper = document.getElementById('pricewrapper')
+  if (!modalContent || !priceWrapper) {
+    console.error('Modal content or price wrapper element not found')
     return
   }
 
@@ -63,7 +80,7 @@ function updateModal(maxPages) {
         const servicePrice = document.createElement('p')
         servicePrice.className = 'modal-service-price'
         const price = parseFloat(selectedRadio.dataset.price) || 0
-        servicePrice.textContent = `$${price.toFixed(2)}`
+        servicePrice.textContent = formatCurrency(price, false) // Use false to exclude the currency symbol
         selectionWrapper.appendChild(servicePrice)
 
         pageWrapper.appendChild(selectionWrapper)
@@ -85,11 +102,11 @@ function updateModal(maxPages) {
     }
   }
 
-  const totalPriceElement = document.createElement('p')
-  totalPriceElement.id = 'modal-total-price'
-  totalPriceElement.className = 'modal-total-price'
-  totalPriceElement.textContent = `Total: $${totalPrice.toFixed(2)}`
-  modalContent.appendChild(totalPriceElement)
+  // Update the price wrapper
+  priceWrapper.innerHTML = `
+    <p class="sh1 white totalprice">Inversión total</p>
+    <h6 class="h6 white upper-margin">${formatCurrency(totalPrice, true)}</h6>
+  `
 }
 
 export function initializeModal() {
