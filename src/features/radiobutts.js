@@ -32,6 +32,19 @@ function initializeRadioButtons() {
         console.log('Change event dispatched for:', radioInput.name)
       })
 
+      // New function to select the first option in a subgroup
+      function selectFirstOption(subgroupName) {
+        const subgroupRadios = document.querySelectorAll(
+          `input[name="${subgroupName}"]`
+        )
+        if (subgroupRadios.length > 0) {
+          subgroupRadios[0].checked = true
+          subgroupRadios[0].dispatchEvent(
+            new Event('change', { bubbles: true })
+          )
+        }
+      }
+
       // Keep the existing change event listener
       radioInput.addEventListener('change', function () {
         console.log('Radio input changed:', radioInput)
@@ -57,6 +70,26 @@ function initializeRadioButtons() {
             childElements.forEach((child) => {
               child.classList.add('is-active')
               console.log('Added is-active to child:', child)
+            })
+
+            // Check if this is a parent group and select first option in subgroups
+            const pageNumber = groupName.split('-')[0]
+            const subgroups = [
+              'fotos',
+              'video',
+              'cobertura',
+              'talentfoto',
+              'talentvideo',
+            ]
+            subgroups.forEach((subgroup) => {
+              const subgroupName = `${pageNumber}-${subgroup}`
+              const subgroupWrapper = document.querySelector(`#${subgroupName}`)
+              if (
+                subgroupWrapper &&
+                subgroupWrapper.classList.contains('is-active')
+              ) {
+                selectFirstOption(subgroupName)
+              }
             })
           } else {
             parentField.classList.remove('is-active')
