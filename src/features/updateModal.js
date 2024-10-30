@@ -154,3 +154,5 @@ export function initializeModal() {
     setup()
   }
 }
+
+export default updateModal

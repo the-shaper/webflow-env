@@ -8,37 +8,58 @@ function initializeFormLogic(calculator) {
   function handleConditionalGroups(event) {
     if (event.target.type !== 'radio') return
 
-    const pageNumber = event.target.name.split('-')[0] // e.g., 'p1' from 'p1-services'
-    const currentSwitch = document.getElementById(`${pageNumber}-switch`)
+    const pageNumber = event.target.name.split('-')[0]
+    const formFields = document.getElementById(`${pageNumber}-formfields`)
 
-    if (!currentSwitch || !currentSwitch.checked) return
+    if (!formFields) return
 
+    console.log('Handling conditional groups for page:', pageNumber)
+
+    // 1. First, reset ALL conditional groups in this page
+    const allConditionalGroups = formFields.querySelectorAll(
+      '.boxes-radio-wrapper.conditional-group'
+    )
+    console.log('Found conditional groups:', allConditionalGroups.length)
+
+    allConditionalGroups.forEach((group) => {
+      // First, hide the group
+      group.classList.remove('is-active')
+
+      // Then reset all radio inputs in this group
+      const radioInputs = group.querySelectorAll('input[type="radio"]')
+      console.log('Resetting radios in group:', group.id, radioInputs.length)
+
+      radioInputs.forEach((radio) => {
+        if (radio.checked) {
+          console.log('Unchecking radio:', radio.name, radio.value)
+          radio.checked = false
+          // Force UI update
+          radio.dispatchEvent(new Event('change', { bubbles: true }))
+        }
+      })
+    })
+
+    // 2. Then show only the groups we want to show
     const groupsToShow = event.target.dataset.showGroup
       ? event.target.dataset.showGroup.split(',').map((g) => g.trim())
       : []
 
-    const allConditionalGroups = document.querySelectorAll(
-      `#${pageNumber}-formfields .boxes-radio-wrapper.conditional-group`
-    )
+    console.log('Groups to show:', groupsToShow)
 
-    allConditionalGroups.forEach((group) => {
-      if (groupsToShow.includes(group.id)) {
+    groupsToShow.forEach((groupId) => {
+      const group = document.getElementById(groupId)
+      if (group) {
         group.classList.add('is-active')
-        // Select first option in the newly activated group
-        const firstRadio = group.querySelector('input[type="radio"]')
-        if (firstRadio) {
-          firstRadio.checked = true
-          firstRadio.dispatchEvent(new Event('change', { bubbles: true }))
-        }
-      } else {
-        group.classList.remove('is-active')
       }
     })
 
-    if (calculator && typeof calculator.recalculate === 'function') {
-      calculator.recalculate()
-    }
-    updateButtonStates()
+    // 5. Ensure recalculation happens after all changes
+    requestAnimationFrame(() => {
+      if (calculator && typeof calculator.recalculate === 'function') {
+        calculator.recalculate()
+      }
+      updateButtonStates()
+    })
   }
 
   function toggleFormFields(pageNumber, isActive) {
