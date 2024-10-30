@@ -1,9 +1,18 @@
-- [ ] Agregar conditional visibility para "cuantos fotógrafos"
+- [x] agegar boton de "ver selección" y conectar con modal
+- [x] Cambiar los atributos de todos los campos (aunque realmente solo necesitamos calar la primer pag, no?)
+- [x] corregir estética del boton
+- [x] Construir modal sumario basado en selección de servicios
+- [x] Resolver integración de calendario
+- [ ] Revisar modal on mobile
+- [ ] Input fields: cambiar color de placeholder
+- [ ] Cuando arrow: is-off, desactivar click
+- [ ] dar el mismo formato de currency a todos los precios
+- [ ] Corregir spacing en footer
+- [ ] Corregir jerarquía de colores (botones, links, etc)
 - [ ] Agregar conditional visibility para "cuantos videógrafos"
 - [ ] Conectar formulario de contacto a un flujo real
-- [ ] Resolver integración de calendario
-- [ ] Construir sumario basado en selección de servicios
-- [ ]
+- [ ] Agregar glitch de calculadora en la resta del cero
+- [ ] Corregir como se ve la fecha en movil
 - [ ]
 - [ ]
 - [ ]

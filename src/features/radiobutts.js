@@ -1,17 +1,18 @@
 function initializeRadioButtons() {
-  console.log('Initializing radio buttons')
+  let isInitialized = false
 
   function setupRadioButtonBehavior() {
+    if (isInitialized) return
+    isInitialized = true
+
     // Get all radio button fields
     const radioButtonFields = document.querySelectorAll(
       '.radio-button-field.w-radio'
     )
-    console.log('Radio button fields:', radioButtonFields)
 
     radioButtonFields.forEach((field) => {
       // Get the radio input inside the field
       const radioInput = field.querySelector('input[type="radio"]')
-      console.log('Radio input found:', radioInput)
 
       // Add event listener to the field instead of the radio input
       field.addEventListener('click', function (event) {
@@ -20,86 +21,34 @@ function initializeRadioButtons() {
 
         // Manually check the radio input
         radioInput.checked = true
-        console.log(
-          'Radio input checked:',
-          radioInput.checked,
-          'Value:',
-          radioInput.value
-        )
 
         // Dispatch a change event to trigger the existing logic
         radioInput.dispatchEvent(new Event('change', { bubbles: true }))
-        console.log('Change event dispatched for:', radioInput.name)
       })
-
-      // New function to select the first option in a subgroup
-      function selectFirstOption(subgroupName) {
-        const subgroupRadios = document.querySelectorAll(
-          `input[name="${subgroupName}"]`
-        )
-        if (subgroupRadios.length > 0) {
-          subgroupRadios[0].checked = true
-          subgroupRadios[0].dispatchEvent(
-            new Event('change', { bubbles: true })
-          )
-        }
-      }
 
       // Keep the existing change event listener
       radioInput.addEventListener('change', function () {
-        console.log('Radio input changed:', radioInput)
-
         // Get the name of the radio group
         const groupName = radioInput.name
-        console.log('Radio group name:', groupName)
 
         // Get all radio buttons in the same group
         const groupRadioButtons = document.querySelectorAll(
           `input[name="${groupName}"]`
         )
-        console.log('Group radio buttons:', groupRadioButtons)
 
         groupRadioButtons.forEach((button) => {
           const parentField = button.closest('.radio-button-field.w-radio')
           if (button.checked) {
             parentField.classList.add('is-active')
-            console.log('Added is-active to:', parentField)
-
-            // Add is-active to all child elements
             const childElements = parentField.querySelectorAll('*')
             childElements.forEach((child) => {
               child.classList.add('is-active')
-              console.log('Added is-active to child:', child)
-            })
-
-            // Check if this is a parent group and select first option in subgroups
-            const pageNumber = groupName.split('-')[0]
-            const subgroups = [
-              'fotos',
-              'video',
-              'cobertura',
-              'talentfoto',
-              'talentvideo',
-            ]
-            subgroups.forEach((subgroup) => {
-              const subgroupName = `${pageNumber}-${subgroup}`
-              const subgroupWrapper = document.querySelector(`#${subgroupName}`)
-              if (
-                subgroupWrapper &&
-                subgroupWrapper.classList.contains('is-active')
-              ) {
-                selectFirstOption(subgroupName)
-              }
             })
           } else {
             parentField.classList.remove('is-active')
-            console.log('Removed is-active from:', parentField)
-
-            // Remove is-active from all child elements
             const childElements = parentField.querySelectorAll('*')
             childElements.forEach((child) => {
               child.classList.remove('is-active')
-              console.log('Removed is-active from child:', child)
             })
           }
         })
@@ -109,10 +58,40 @@ function initializeRadioButtons() {
         radioInput.dispatchEvent(event)
       })
     })
+
+    function handleConditionalGroupChanges() {
+      const conditionalGroups = document.querySelectorAll(
+        '.boxes-radio-wrapper.conditional-group'
+      )
+
+      conditionalGroups.forEach((group) => {
+        if (!group.classList.contains('is-active')) {
+          const radioInputs = group.querySelectorAll('input[type="radio"]')
+          radioInputs.forEach((radio) => {
+            radio.checked = false
+          })
+        }
+      })
+
+      if (
+        window.calculator &&
+        typeof window.calculator.recalculate === 'function'
+      ) {
+        window.calculator.recalculate()
+      }
+    }
+
+    // Add event listener for changes in conditional groups
+    document.addEventListener(
+      'conditionalGroupChanged',
+      handleConditionalGroupChanges
+    )
   }
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', setupRadioButtonBehavior)
+    document.addEventListener('DOMContentLoaded', setupRadioButtonBehavior, {
+      once: true,
+    })
   } else {
     setupRadioButtonBehavior()
   }
