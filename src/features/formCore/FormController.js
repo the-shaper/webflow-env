@@ -71,7 +71,13 @@ class FormController {
   setupEventDelegation() {
     document.addEventListener('change', (event) => {
       if (event.target.matches('input[type="radio"]')) {
-        this.handleConditionalGroups(event)
+        const isCalculatorRadio =
+          event.target.name.endsWith('-services') || // Main service radio
+          event.target.closest('.conditional-group') // Conditional group radio
+
+        if (isCalculatorRadio) {
+          this.handleConditionalGroups(event)
+        }
       }
 
       if (event.target.matches('[id$="-switch"]')) {
@@ -112,17 +118,14 @@ class FormController {
     if (!isInConditionalGroup) {
       console.log('Main radio selected, resetting conditional groups')
 
-      // First, collect all groups to deactivate
       const groupsToReset = Array.from(
         formFields.querySelectorAll('.boxes-radio-wrapper.conditional-group')
       )
 
-      // Then, collect all groups to activate
       const groupsToShow = radio.checked
         ? radio.dataset.showGroup?.split(',') || []
         : []
 
-      // Perform all DOM operations in a single batch
       requestAnimationFrame(() => {
         // First reset all groups
         groupsToReset.forEach((group) => {
@@ -131,12 +134,13 @@ class FormController {
           this.resetGroupInputs(group)
         })
 
-        // Then activate necessary groups
+        // Then activate necessary groups and select default options
         groupsToShow.forEach((groupId) => {
           const group = document.getElementById(groupId?.trim())
           if (group) {
             console.log('Activating group:', groupId)
             group.classList.add('is-active')
+            this.selectDefaultOption(group)
           }
         })
 
@@ -217,6 +221,38 @@ class FormController {
     formFields.querySelectorAll('.conditional-group').forEach((group) => {
       group.classList.remove('is-active')
     })
+  }
+
+  selectDefaultOption(group) {
+    // Get the first radio button in the group
+    const firstRadio = group.querySelector('input[type="radio"]')
+    if (!firstRadio) return
+
+    console.log('🎯 Selecting default option:', {
+      groupId: group.id,
+      radioName: firstRadio.name,
+      radioValue: firstRadio.value,
+    })
+
+    // Set checked state
+    firstRadio.checked = true
+
+    // Update Webflow's visual state
+    const radioField = firstRadio.closest('.radio-button-field.w-radio')
+    if (radioField) {
+      radioField.classList.add('is-active')
+      firstRadio.classList.add('is-active')
+
+      // Update all children (including w-form-label)
+      radioField.querySelectorAll('*').forEach((child) => {
+        child.classList.add('is-active')
+      })
+    }
+
+    // Dispatch a synthetic change event to ensure our system knows about the selection
+    const syntheticEvent = new Event('change', { bubbles: true })
+    syntheticEvent.synthetic = true
+    firstRadio.dispatchEvent(syntheticEvent)
   }
 }
 
