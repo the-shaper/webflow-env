@@ -37,24 +37,6 @@ class Calculator {
   calculatePageSum(wrapper, pageNum) {
     let sum = 0
     const mainGroup = new Map()
-    const conditionalGroups = new Map()
-
-    // Debug: Log all radio buttons state before any processing
-    console.log('\n🔍 DEBUG - Before Processing:')
-    const allRadios = wrapper.querySelectorAll('input[type="radio"]')
-    console.log(
-      'All radios in wrapper:',
-      Array.from(allRadios).map((r) => ({
-        name: r.name,
-        checked: r.checked,
-        value: r.value,
-        price: r.dataset.price,
-        inConditionalGroup: !!r.closest('.conditional-group'),
-        groupActive: r
-          .closest('.conditional-group')
-          ?.classList.contains('is-active'),
-      }))
-    )
 
     // First, get the main service radio (if any)
     const mainServiceRadio = wrapper.querySelector(
@@ -78,39 +60,75 @@ class Calculator {
       })
     }
 
-    // Debug: Log conditional groups state
-    const allConditionalGroups = wrapper.querySelectorAll('.conditional-group')
+    // Get ALL active conditional groups
+    const activeGroups = wrapper.querySelectorAll(
+      '.conditional-group.is-active'
+    )
     console.log(
-      '🔍 Conditional Groups:',
-      Array.from(allConditionalGroups).map((g) => ({
+      '🔍 Found Active Groups:',
+      Array.from(activeGroups).map((g) => ({
         id: g.id,
-        isActive: g.classList.contains('is-active'),
-        hasCheckedRadios: !!g.querySelector('input[type="radio"]:checked'),
+        hasCheckedRadio: !!g.querySelector('input[type="radio"]:checked'),
+        checkedRadioDetails: Array.from(
+          g.querySelectorAll('input[type="radio"]:checked')
+        ).map((r) => ({
+          name: r.name,
+          value: r.value,
+          price: r.dataset.price,
+        })),
       }))
     )
 
-    // Then get all conditional radios
-    const conditionalRadios = wrapper.querySelectorAll(
-      '.conditional-group.is-active input[type="radio"]:checked'
-    )
+    // Create a Map to store all checked radios by their names
+    const checkedRadios = new Map()
 
-    // Debug: Log found conditional radios
-    console.log(
-      '🔍 Found Conditional Radios:',
-      Array.from(conditionalRadios).map((r) => ({
-        name: r.name,
-        value: r.value,
-        price: r.dataset.price,
-        groupId: r.closest('.conditional-group')?.id,
-      }))
-    )
-
-    conditionalRadios.forEach((radio) => {
-      conditionalGroups.set(radio.name, {
-        radio,
-        price: parseFloat(radio.dataset.price) || 0,
-        groupType: 'conditional',
+    // First pass: collect all checked radios from active groups
+    activeGroups.forEach((group) => {
+      // Get all radio inputs in this group
+      const allRadios = group.querySelectorAll('input[type="radio"]')
+      console.log(`🔍 Group ${group.id} Details:`, {
+        groupId: group.id,
+        isActive: group.classList.contains('is-active'),
+        allRadios: Array.from(allRadios).map((r) => ({
+          name: r.name,
+          checked: r.checked,
+          value: r.value,
+          price: r.dataset.price,
+          parentIsActive: r
+            .closest('.radio-button-field')
+            ?.classList.contains('is-active'),
+        })),
       })
+
+      // Find the checked radio for this group
+      const checkedRadio = Array.from(allRadios).find((radio) => {
+        const isChecked = radio.checked
+        console.log(`Radio Check in ${group.id}:`, {
+          name: radio.name,
+          value: radio.value,
+          isChecked,
+          hasActiveParent: radio
+            .closest('.radio-button-field')
+            ?.classList.contains('is-active'),
+        })
+        return isChecked
+      })
+
+      if (checkedRadio) {
+        console.log(`✅ Found checked radio in ${group.id}:`, {
+          name: checkedRadio.name,
+          value: checkedRadio.value,
+          price: checkedRadio.dataset.price,
+        })
+        checkedRadios.set(checkedRadio.name, {
+          radio: checkedRadio,
+          price: parseFloat(checkedRadio.dataset.price) || 0,
+          groupType: 'conditional',
+          groupId: group.id,
+        })
+      } else {
+        console.log(`❌ No checked radio found in ${group.id}`)
+      }
     })
 
     // Process main group first
@@ -125,11 +143,12 @@ class Calculator {
       sum += data.price
     })
 
-    // Then add conditional groups
+    // Then process all conditional groups
     console.log('\nProcessed conditional groups:')
-    conditionalGroups.forEach((data, groupName) => {
+    checkedRadios.forEach((data, radioName) => {
       console.log({
-        groupName,
+        radioName,
+        groupId: data.groupId,
         value: data.radio.value,
         price: data.price,
         groupType: data.groupType,
@@ -177,8 +196,11 @@ class Calculator {
     }
 
     // Recalculate total without this page
-    const totalSum = Array.from(this.prices.values()).reduce(
-      (sum, price) => (typeof price === 'number' ? sum + price : sum),
+    const totalSum = Array.from(this.prices.entries()).reduce(
+      (sum, [key, value]) => {
+        // Only add numerical page values (ignore 'total' key)
+        return typeof key === 'number' ? sum + value : sum
+      },
       0
     )
 

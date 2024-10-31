@@ -7,6 +7,7 @@ class FormController {
     this.setupNavigation()
     this.hideAllConditionalGroups()
     this.showPage(1)
+    this.calculateTimeout = null
   }
 
   hideAllConditionalGroups() {
@@ -104,50 +105,57 @@ class FormController {
       return
     }
 
-    // Debug: Log DOM state before changes
-    console.log('2. Before Changes:', {
-      mainServiceChecked: !!formFields.querySelector(
-        `input[name="p${pageNum}-services"]:checked`
-      ),
-      activeConditionalGroups: Array.from(
-        formFields.querySelectorAll('.conditional-group.is-active')
-      ).map((g) => g.id),
-      checkedRadios: Array.from(
-        formFields.querySelectorAll('input[type="radio"]:checked')
-      ).map((r) => r.name),
-    })
-
     const isInConditionalGroup = radio.closest('.conditional-group')
     console.log('Is in conditional group:', !!isInConditionalGroup)
 
+    // Only handle main service radio changes
     if (!isInConditionalGroup) {
       console.log('Main radio selected, resetting conditional groups')
-      formFields
-        .querySelectorAll('.boxes-radio-wrapper.conditional-group')
-        .forEach((group) => {
+
+      // First, collect all groups to deactivate
+      const groupsToReset = Array.from(
+        formFields.querySelectorAll('.boxes-radio-wrapper.conditional-group')
+      )
+
+      // Then, collect all groups to activate
+      const groupsToShow = radio.checked
+        ? radio.dataset.showGroup?.split(',') || []
+        : []
+
+      // Perform all DOM operations in a single batch
+      requestAnimationFrame(() => {
+        // First reset all groups
+        groupsToReset.forEach((group) => {
           console.log('Resetting group:', group.id)
           group.classList.remove('is-active')
           this.resetGroupInputs(group)
         })
 
-      const groupsToShow = radio.dataset.showGroup?.split(',') || []
-      console.log('Groups to show:', groupsToShow)
+        // Then activate necessary groups
+        groupsToShow.forEach((groupId) => {
+          const group = document.getElementById(groupId?.trim())
+          if (group) {
+            console.log('Activating group:', groupId)
+            group.classList.add('is-active')
+          }
+        })
 
-      groupsToShow.forEach((groupId) => {
-        const group = document.getElementById(groupId?.trim())
-        if (group) {
-          console.log('Activating group:', groupId)
-          group.classList.add('is-active')
-        }
+        // Finally calculate prices
+        this.calculator.calculatePagePrices(pageNum)
+      })
+    } else {
+      // For conditional group changes, just calculate prices
+      requestAnimationFrame(() => {
+        this.calculator.calculatePagePrices(pageNum)
       })
     }
-
-    this.calculator.calculatePagePrices(pageNum)
   }
 
   resetGroupInputs(group) {
     console.log('\n🔄 Resetting inputs for group:', group.id)
-    group.querySelectorAll('input[type="radio"]').forEach((radio) => {
+    const radios = group.querySelectorAll('input[type="radio"]')
+
+    radios.forEach((radio) => {
       if (radio.checked) {
         console.log('Unchecking radio:', {
           name: radio.name,
@@ -155,6 +163,17 @@ class FormController {
           price: radio.dataset.price,
         })
         radio.checked = false
+
+        // Ensure the radio field styling is updated
+        const field = radio.closest('.radio-button-field.w-radio')
+        if (field) {
+          field.classList.remove('is-active')
+          field.querySelectorAll('*').forEach((child) => {
+            child.classList.remove('is-active')
+          })
+        }
+
+        // Notify about the change
         radio.dispatchEvent(new Event('change', { bubbles: true }))
       }
     })
