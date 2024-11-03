@@ -3,11 +3,41 @@ class FormController {
     this.calculator = calculator
     this.currentPage = 1
     this.maxPages = document.querySelectorAll('.f-page').length
+    this.initializeSwitchStates()
     this.setupEventDelegation()
     this.setupNavigation()
     this.hideAllConditionalGroups()
     this.showPage(1)
     this.calculateTimeout = null
+  }
+
+  initializeSwitchStates() {
+    // Get all form pages
+    const formPages = document.querySelectorAll('.f-page')
+
+    formPages.forEach((page) => {
+      const pageNum = page.id.match(/p(\d+)/)?.[1]
+      if (!pageNum) return
+
+      const formFields = document.getElementById(`p${pageNum}-formfields`)
+      const switchElement = document.getElementById(`p${pageNum}-switch`)
+
+      if (formFields) {
+        // Add .off class by default
+        formFields.classList.add('off')
+
+        // Disable all inputs
+        this.toggleInputs(formFields, false)
+
+        // If there's a switch, ensure it's unchecked
+        if (switchElement) {
+          switchElement.checked = false
+        }
+
+        // Clear any prices for this page
+        this.calculator.clearPagePrices(pageNum)
+      }
+    })
   }
 
   hideAllConditionalGroups() {

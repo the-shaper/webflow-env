@@ -33,7 +33,7 @@ input[type='date' i] {
 }
 
 input[type='date']::-webkit-calendar-picker-indicator {
-  display: none;
+  display: visible;
 }
 
 ::placeholder {
@@ -41,4 +41,27 @@ input[type='date']::-webkit-calendar-picker-indicator {
   font-family: neue-haas-grotesk-display-light, sans-serif;
   font-size: 0.8rem;
   font-weight: 300;
+}
+
+.modal-content {
+  position: relative;
+  overflow-y: auto;
+  /* Hide scrollbar for Chrome/Safari/Opera */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  /* Hide scrollbar for Firefox */
+  scrollbar-width: none;
+
+  /* Create the fade effect */
+  mask-image: linear-gradient(
+    to bottom,
+    black calc(100% - 64px),
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    black calc(100% - 64px),
+    transparent 100%
+  );
 }
