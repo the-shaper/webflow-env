@@ -39,13 +39,12 @@ class SummaryModal {
 
     // Clear existing content
     this.modalContent.innerHTML =
-      '<h3 class="modal-main-title">Your Package Summary</h3>'
+      '<h3 class="modal-main-title">Resumen de tu Paquete</h3>'
 
     // Get all form pages
     const formPages = document.querySelectorAll('.f-page')
 
     formPages.forEach((page) => {
-      // Only process pages that have selections
       const formFields = page.querySelector('[id$="-formfields"]')
       const pageTotal = page.querySelector('[id$="-totalprice"]')
 
@@ -62,24 +61,43 @@ class SummaryModal {
       titleElement.textContent = pageTitle ? pageTitle.textContent : ''
       pageWrapper.appendChild(titleElement)
 
-      // Get selected services
-      const selectedServices = this.getPageSelections(formFields)
-      selectedServices.forEach((service) => {
-        const selectionWrapper = document.createElement('div')
-        selectionWrapper.className = `selected-concept-wrapper ${service.type}`
+      // Get selections organized by type
+      const selections = this.getPageSelections(formFields)
 
-        const serviceType = document.createElement('p')
-        serviceType.className = 'modal-service-type'
-        serviceType.textContent = service.value
-        selectionWrapper.appendChild(serviceType)
+      // Add main service if exists
+      if (selections.main) {
+        this.addServiceSection(pageWrapper, selections.main)
+      }
 
-        const servicePrice = document.createElement('p')
-        servicePrice.className = 'modal-service-price'
-        servicePrice.textContent = service.price
-        selectionWrapper.appendChild(servicePrice)
+      // Create photo services section if exists
+      if (selections.photo.length > 0) {
+        const photoWrapper = document.createElement('div')
+        photoWrapper.className = 'service-category-wrapper photo'
+        const photoTitle = document.createElement('h5')
+        photoTitle.className = 'service-category-title'
+        photoTitle.textContent = 'Detalles de la Fotografía'
+        photoWrapper.appendChild(photoTitle)
 
-        pageWrapper.appendChild(selectionWrapper)
-      })
+        selections.photo.forEach((service) => {
+          this.addServiceSection(photoWrapper, service)
+        })
+        pageWrapper.appendChild(photoWrapper)
+      }
+
+      // Create video services section if exists
+      if (selections.video.length > 0) {
+        const videoWrapper = document.createElement('div')
+        videoWrapper.className = 'service-category-wrapper video'
+        const videoTitle = document.createElement('h5')
+        videoTitle.className = 'service-category-title'
+        videoTitle.textContent = 'Detalles del Video'
+        videoWrapper.appendChild(videoTitle)
+
+        selections.video.forEach((service) => {
+          this.addServiceSection(videoWrapper, service)
+        })
+        pageWrapper.appendChild(videoWrapper)
+      }
 
       this.modalContent.appendChild(pageWrapper)
     })
@@ -97,19 +115,25 @@ class SummaryModal {
   }
 
   getPageSelections(formFields) {
-    const selections = []
+    const selections = {
+      main: null,
+      photo: [],
+      video: [],
+      other: [],
+    }
 
     // Get main service selection
     const mainService = formFields.querySelector(
       'input[type="radio"][name$="-services"]:checked'
     )
     if (mainService) {
-      selections.push({
+      selections.main = {
         type: 'main-service',
         value: mainService.value,
         price: mainService.closest('.radio-button-field').querySelector('.p2')
           .textContent,
-      })
+        serviceType: this.getServiceType(mainService.name),
+      }
     }
 
     // Get conditional selections from active groups
@@ -119,13 +143,23 @@ class SummaryModal {
     activeGroups.forEach((group) => {
       const checkedRadio = group.querySelector('input[type="radio"]:checked')
       if (checkedRadio) {
-        selections.push({
-          type: this.getServiceType(checkedRadio.name),
+        const serviceType = this.getServiceType(checkedRadio.name)
+        const selection = {
+          type: serviceType,
           value: checkedRadio.value,
           price: checkedRadio
             .closest('.radio-button-field')
             .querySelector('.p2').textContent,
-        })
+        }
+
+        // Add to appropriate category
+        if (serviceType === 'photo-service') {
+          selections.photo.push(selection)
+        } else if (serviceType === 'video-service') {
+          selections.video.push(selection)
+        } else {
+          selections.other.push(selection)
+        }
       }
     })
 
@@ -148,6 +182,23 @@ class SummaryModal {
     if (this.modalBackground) {
       this.modalBackground.style.display = 'none'
     }
+  }
+
+  addServiceSection(wrapper, service) {
+    const selectionWrapper = document.createElement('div')
+    selectionWrapper.className = `selected-concept-wrapper ${service.type}`
+
+    const serviceType = document.createElement('p')
+    serviceType.className = 'modal-service-type'
+    serviceType.textContent = service.value
+    selectionWrapper.appendChild(serviceType)
+
+    const servicePrice = document.createElement('p')
+    servicePrice.className = 'modal-service-price'
+    servicePrice.textContent = service.price
+    selectionWrapper.appendChild(servicePrice)
+
+    wrapper.appendChild(selectionWrapper)
   }
 }
 
