@@ -4,14 +4,14 @@
 - [x] Construir modal sumario basado en selección de servicios
 - [x] Resolver integración de calendario
 - [ ] Revisar modal on mobile
+- [ ] Corregir estética del calendario en IOS (webkit)
 - [ ] Input fields: cambiar color de placeholder
 - [ ] Cuando arrow: is-off, desactivar click
 - [ ] dar el mismo formato de currency a todos los precios
 - [ ] Corregir spacing en footer
 - [ ] Corregir jerarquía de colores (botones, links, etc)
-- [ ] Agregar conditional visibility para "cuantos videógrafos"
 - [ ] Conectar formulario de contacto a un flujo real
-- [ ] Agregar glitch de calculadora en la resta del cero
+- [x] Agregar glitch de calculadora en la resta del cero
 - [ ] Corregir como se ve la fecha en movil
 - [ ]
 - [ ]
