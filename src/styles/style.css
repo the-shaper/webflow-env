@@ -33,7 +33,7 @@ input[type='date' i] {
 }
 
 input[type='date']::-webkit-calendar-picker-indicator {
-  display: visible;
+  display: none;
 }
 
 ::placeholder {
@@ -64,4 +64,19 @@ input[type='date']::-webkit-calendar-picker-indicator {
     black calc(100% - 64px),
     transparent 100%
   );
+}
+
+.text-field {
+  font-size: 1rem;
+  color: var(--OkayWhite);
+}
+
+.service-category-wrapper {
+  margin-top: 1rem;
+  padding-left: 1rem;
+  border-left: 2px solid #eee;
+}
+
+.formPage-data-wrapper {
+  margin-bottom: 1rem;
 }

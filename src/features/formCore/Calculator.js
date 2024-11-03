@@ -168,7 +168,12 @@ class Calculator {
   }
 
   formatCurrency(number) {
-    return '$' + number.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+    return new Intl.NumberFormat('es-MX', {
+      style: 'currency',
+      currency: 'MXN',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(number)
   }
 
   notifyListeners() {
