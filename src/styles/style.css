@@ -80,3 +80,16 @@ input[type='date']::-webkit-calendar-picker-indicator {
 .formPage-data-wrapper {
   margin-bottom: 1rem;
 }
+
+/* Make date picker placeholder visible on iOS */
+.date-picker::-webkit-datetime-edit-text,
+.date-picker::-webkit-datetime-edit-month-field,
+.date-picker::-webkit-datetime-edit-day-field,
+.date-picker::-webkit-datetime-edit-year-field {
+  color: initial; /* or your desired color */
+}
+
+/* Style for when the input is empty (shows placeholder) */
+.date-picker:not(:valid)::-webkit-datetime-edit {
+  color: #757575; /* or your desired placeholder color */
+}

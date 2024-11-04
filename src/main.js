@@ -1,7 +1,6 @@
 import flatpickr from 'flatpickr'
 import 'flatpickr/dist/flatpickr.min.css'
 import 'flatpickr/dist/themes/dark.css'
-
 // Old implementation imports (commented out for now)
 // import initializeCalculator from './features/calculator'
 // import initializeFormLogic from './features/formLogic'
