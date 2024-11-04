@@ -74,11 +74,15 @@ input[type='date']::-webkit-calendar-picker-indicator {
 .service-category-wrapper {
   margin-top: 1rem;
   padding-left: 1rem;
-  border-left: 2px solid #eee;
+  border-left: 2px solid #1708bb;
 }
 
 .formPage-data-wrapper {
   margin-bottom: 1rem;
+}
+
+.date-picker {
+  color: var(--OkayWhite);
 }
 
 /* Make date picker placeholder visible on iOS */
@@ -86,10 +90,10 @@ input[type='date']::-webkit-calendar-picker-indicator {
 .date-picker::-webkit-datetime-edit-month-field,
 .date-picker::-webkit-datetime-edit-day-field,
 .date-picker::-webkit-datetime-edit-year-field {
-  color: initial; /* or your desired color */
+  color: #e5f0fa; /* or your desired color */
 }
 
 /* Style for when the input is empty (shows placeholder) */
 .date-picker:not(:valid)::-webkit-datetime-edit {
-  color: #757575; /* or your desired placeholder color */
+  color: #fc1dae; /* or your desired placeholder color */
 }
