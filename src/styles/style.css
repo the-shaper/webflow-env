@@ -22,7 +22,7 @@
   background-color: rgb(228, 137, 193);
 }
 
-input[type='date' i] {
+/* input[type='date' i] {
   font-family: neue-haas-grotesk-display-light, sans-serif;
   font-size: 0.7rem;
   font-color: var(white);
@@ -34,7 +34,7 @@ input[type='date' i] {
 
 input[type='date']::-webkit-calendar-picker-indicator {
   display: none;
-}
+} */
 
 ::placeholder {
   color: var(--OkayWhite);
@@ -82,7 +82,7 @@ input[type='date']::-webkit-calendar-picker-indicator {
 }
 
 .date-picker {
-  color: var(--OkayWhite);
+  color: #2bf0df;
 }
 
 /* Make date picker placeholder visible on iOS */
@@ -90,7 +90,7 @@ input[type='date']::-webkit-calendar-picker-indicator {
 .date-picker::-webkit-datetime-edit-month-field,
 .date-picker::-webkit-datetime-edit-day-field,
 .date-picker::-webkit-datetime-edit-year-field {
-  color: #e5f0fa; /* or your desired color */
+  color: #2bf0df; /* or your desired color */
 }
 
 /* Style for when the input is empty (shows placeholder) */
