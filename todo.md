@@ -3,6 +3,8 @@
 - [x] corregir estética del boton
 - [x] Construir modal sumario basado en selección de servicios
 - [x] Resolver integración de calendario
+- [ ] Corregir typos en radio fields (incluido vs included y $ en precios)
+- [ ] Modal: Intentar agrupar foto y video en las listas
 - [ ] Revisar modal on mobile
 - [ ] Corregir estética del calendario en IOS (webkit)
 - [ ] Input fields: cambiar color de placeholder
@@ -13,7 +15,7 @@
 - [ ] Conectar formulario de contacto a un flujo real
 - [x] Agregar glitch de calculadora en la resta del cero
 - [ ] Corregir como se ve la fecha en movil
-- [ ]
+- [ ] Crear CTA "aplicar ahora" en la última página
 - [ ]
 - [ ]
 - [ ]
