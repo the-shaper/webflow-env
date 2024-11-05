@@ -9,6 +9,8 @@ class FormController {
     this.hideAllConditionalGroups()
     this.showPage(1)
     this.calculateTimeout = null
+    this.alertElement = document.getElementById('f-alert')
+    this.nextButton = document.getElementById('f-next-button')
   }
 
   initializeSwitchStates() {
@@ -63,6 +65,8 @@ class FormController {
   }
 
   handleNextButtonClick() {
+    if (this.nextButton?.disabled) return
+
     if (this.currentPage < this.maxPages) {
       this.showPage(this.currentPage + 1)
     }
@@ -183,6 +187,9 @@ class FormController {
         this.calculator.calculatePagePrices(pageNum)
       })
     }
+
+    // Update alert visibility after radio selection
+    this.updateAlertVisibility(pageNum)
   }
 
   resetGroupInputs(group) {
@@ -217,6 +224,13 @@ class FormController {
     const pageNumber = event.target.id.split('-')[0].substring(1)
     const isChecked = event.target.checked
     this.toggleFormFields(pageNumber, isChecked)
+
+    // Handle alert visibility based on switch state
+    if (!isChecked) {
+      this.hideAlert()
+    } else {
+      this.updateAlertVisibility(pageNumber)
+    }
   }
 
   toggleFormFields(pageNumber, isActive) {
@@ -283,6 +297,42 @@ class FormController {
     const syntheticEvent = new Event('change', { bubbles: true })
     syntheticEvent.synthetic = true
     firstRadio.dispatchEvent(syntheticEvent)
+  }
+
+  updateAlertVisibility(pageNumber) {
+    const formFields = document.getElementById(`p${pageNumber}-formfields`)
+    const switchElement = document.getElementById(`p${pageNumber}-switch`)
+
+    if (!formFields || !switchElement) return
+
+    if (switchElement.checked && !this.hasSelectedRadios(formFields)) {
+      this.showAlert()
+    } else {
+      this.hideAlert()
+    }
+  }
+
+  hasSelectedRadios(formFields) {
+    const radios = formFields.querySelectorAll('input[type="radio"]')
+    return Array.from(radios).some((radio) => radio.checked)
+  }
+
+  showAlert() {
+    this.alertElement?.classList.add('is-active')
+    if (this.nextButton) {
+      this.nextButton.classList.add('is-off')
+      this.nextButton.disabled = true
+    }
+  }
+
+  hideAlert() {
+    this.alertElement?.classList.remove('is-active')
+    if (this.nextButton) {
+      if (this.currentPage !== this.maxPages) {
+        this.nextButton.classList.remove('is-off')
+        this.nextButton.disabled = false
+      }
+    }
   }
 }
 
