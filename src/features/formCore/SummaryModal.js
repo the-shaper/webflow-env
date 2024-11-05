@@ -3,14 +3,21 @@ class SummaryModal {
     this.modalBackground = document.getElementById('modal-background')
     this.modalContent = document.getElementById('modal-content')
     this.priceWrapper = document.getElementById('pricewrapper')
+    this.modalButton = document.querySelector('.f-modal-button')
     this.setupListeners()
   }
 
   setupListeners() {
     // Setup open button
-    const openButton = document.getElementById('open-modal')
-    if (openButton) {
-      openButton.addEventListener('click', () => this.updateAndOpen())
+    if (this.modalButton) {
+      this.modalButton.addEventListener('click', (e) => {
+        if (this.modalButton.classList.contains('is-off')) {
+          e.preventDefault()
+          e.stopPropagation()
+          return false
+        }
+        this.updateAndOpen()
+      })
     }
 
     // Setup close button
