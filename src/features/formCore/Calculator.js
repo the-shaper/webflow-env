@@ -178,6 +178,21 @@ class Calculator {
 
   notifyListeners() {
     this.listeners.forEach((callback) => callback(this.prices))
+
+    // Add flash animation to both elements
+    const elements = [
+      document.querySelector('.f-inv-total-wrapper'),
+      document.querySelector('.inv-seccion-wrapper'),
+    ]
+
+    elements.forEach((element) => {
+      if (element) {
+        element.classList.remove('flash-animation')
+        // Force browser reflow to restart animation
+        void element.offsetWidth
+        element.classList.add('flash-animation')
+      }
+    })
   }
 
   subscribe(callback) {
