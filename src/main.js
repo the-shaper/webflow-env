@@ -2,27 +2,27 @@ import flatpickr from 'flatpickr'
 import 'flatpickr/dist/flatpickr.min.css'
 import 'flatpickr/dist/themes/dark.css'
 
-// Old implementation imports (commented out for now)
-// import initializeCalculator from './features/calculator'
-// import initializeFormLogic from './features/formLogic'
-// import initializeRadioButtons from './features/radiobutts'
-// import { initializeModal } from './features/updateModal'
-
-// New implementation import
+// Import both form implementations
 import initializeForm from './features/formCore'
+import initializeForm2 from './features/formCore2'
 import './styles/style.css'
+import initMasonryGrid from './features/Galleries/main-gal.js'
 
-// Old implementation initialization (commented out for now)
-// const calculator = initializeCalculator()
-// initializeFormLogic(calculator)
-// initializeRadioButtons()
-// initializeModal()
+// Initialize both forms if their respective elements exist
+const mainForm = document.querySelector('[data-form="main"]')
+  ? initializeForm()
+  : null
 
-// New implementation initialization
-const form = initializeForm()
+const secondForm = document.querySelector('[data-form="second"]')
+  ? initializeForm2()
+  : null
 
-// Make calculator available globally (as in old implementation)
-window.calculator = form.calculator
+// Initialize Galleries
+initMasonryGrid()
+
+// Make calculators available globally
+window.calculator = mainForm?.calculator
+window.calculator2 = secondForm?.calculator
 
 const datepickerElement = document.querySelector('[data-element="datepicker"]')
 if (datepickerElement) {

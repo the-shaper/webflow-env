@@ -77,6 +77,7 @@ Dans les deux cas, vous avez le HMR (Hot Module Reload) en place, ça permet de 
   ```
 - Si vous faites le dev JS mais pas le dev Webflow (**version recommandée**) :
   Coller ce script dans la partie `Before </body> tag` du custom code de Webflow dans les paramètres du projet pour que ça soit chargé sur toutes les pages. On changera l’url de Netlify un peu plus tard pour charger le fichiers de production.
+
   ```jsx
   <script>
     (function () {
@@ -130,13 +131,17 @@ Dans les deux cas, vous avez le HMR (Hot Module Reload) en place, ça permet de 
     })()
   </script>
   ```
+
   Ce script va permettre de charger le bon fichier JS. Si vous êtes en train de developer et que votre serveur de dev est lancé, il viendra charger les fichiers JS servis sur votre machine. Sinon, il ira les charger depuis Netlify si vous avez poussé votre code en production. Et si ce n'est pas encore en prod sur Netlify, il ne chargera pas de fichier JS.
   Ca vous permet de ne pas à avoir à ping le dev Webflow à chaque fois que vous voulez tester du code, et que vous n'ayez pas besoin de vous connecter au compte Webflow du site.
   ⚠️ **Attention cependant à penser à changer le script une fois que le développement JS est finis et envoyé en production. Cela donnera quelque chose comme ça pour charger les scripts de production**
+
   ```html
   <script src="https://[votre_domaine].netlify.app/main.js"></script>
   ```
+
   ## Étape 4 : Mise en production 🚀
+
   **1.**
   C'est bon votre code est prêt. C'est l'heure de push !
   Pour cette étape il faudra **commit** puis **push** votre code sur **GitHub**.

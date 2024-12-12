@@ -3,20 +3,20 @@
 - [x] corregir estética del boton
 - [x] Construir modal sumario basado en selección de servicios
 - [x] Resolver integración de calendario
-- [ ] Corregir typos en radio fields (incluido vs included y $ en precios)
-- [ ] Modal: Intentar agrupar foto y video en las listas
-- [ ] Revisar modal on mobile
-- [ ] Corregir estética del calendario en IOS (webkit)
-- [ ] Input fields: cambiar color de placeholder
-- [ ] Cuando arrow: is-off, desactivar click
-- [ ] dar el mismo formato de currency a todos los precios
-- [ ] Corregir spacing en footer
-- [ ] Corregir jerarquía de colores (botones, links, etc)
+- [x] Corregir typos en radio fields (incluido vs included y $ en precios)
+- [x] Modal: Intentar agrupar foto y video en las listas
+- [x] Revisar modal on mobile
+- [x] Corregir estética del calendario en IOS (webkit)
+- [x] Input fields: cambiar color de placeholder
+- [x] Cuando arrow: is-off, desactivar click
+- [x] dar el mismo formato de currency a todos los precios
+- [x] Corregir spacing en footer
+- [x] Corregir jerarquía de colores (botones, links, etc)
 - [ ] Conectar formulario de contacto a un flujo real
 - [x] Agregar glitch de calculadora en la resta del cero
 - [ ] Corregir como se ve la fecha en movil
-- [ ] Crear CTA "aplicar ahora" en la última página
-- [ ]
+- [x] Crear CTA "aplicar ahora" en la última página
+- [ ] Hacer últimos chequeos de como se transmite la información hacia el e-mail y como se le puede dar formato
 - [ ]
 - [ ]
 - [ ]

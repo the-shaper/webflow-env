@@ -3,18 +3,18 @@ import FormController from './FormController'
 import RadioManager from './RadioManager'
 import SummaryModal from './SummaryModal'
 
-function initializeForm() {
-  const mainForm = document.querySelector('[data-form="main"]')
-  if (!mainForm) {
-    console.log('⚪ Form1 not found in this page')
+function initializeForm2() {
+  const secondForm = document.querySelector('[data-form="second"]')
+  if (!secondForm) {
+    console.log('⚪ Form2 not found in this page')
     return null
   }
 
-  console.log('🔵 FormCore1 Init:', {
+  console.log('🟣 FormCore2 Init:', {
     page: document.title,
-    formId: mainForm.id,
+    formId: secondForm.id,
     formFields: Array.from(
-      mainForm.querySelectorAll('[id$="-formfields"]')
+      secondForm.querySelectorAll('[id$="-formfields"]')
     ).map((f) => ({
       id: f.id,
       classes: f.className,
@@ -29,7 +29,7 @@ function initializeForm() {
 
   // Get modal button
   const modalButton = document.querySelector(
-    '[data-form="main"] .f-modal-button'
+    '[data-form="second"] .f-modal-button'
   )
   if (modalButton) {
     modalButton.classList.add('is-off') // Set initial state
@@ -47,7 +47,7 @@ function initializeForm() {
   // Subscribe modal to price updates
   calculator.subscribe((prices) => {
     const totalElement = document.querySelector(
-      '[data-form="main"] #form-totalprice'
+      '[data-form="second"] #form-totalprice'
     )
     const totalPrice = prices.get('total') || 0
 
@@ -74,4 +74,4 @@ function initializeForm() {
   }
 }
 
-export default initializeForm
+export default initializeForm2

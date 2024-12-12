@@ -162,3 +162,10 @@ span.flatpickr-weekday {
 .flash-animation {
   animation: flash-update 0.4s ease-in-out;
 }
+
+/* GALLERIES */
+.masonry-image-rndm {
+  flex: 1 0 auto;
+  margin: 0;
+  width: calc(33.333% - 16px); /* For 3 columns with gap */
+}
