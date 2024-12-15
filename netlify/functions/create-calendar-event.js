@@ -1,12 +1,30 @@
 const { google } = require('googleapis')
 
 exports.handler = async (event) => {
-  console.log('Function invoked')
+  // Add CORS headers
+  const headers = {
+    'Access-Control-Allow-Origin': '*', // Be more restrictive in production
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  }
+
+  // Handle preflight requests
+  if (event.httpMethod === 'OPTIONS') {
+    return {
+      statusCode: 200,
+      headers,
+      body: '',
+    }
+  }
 
   // Only allow POST
   if (event.httpMethod !== 'POST') {
     console.log('Method not allowed:', event.httpMethod)
-    return { statusCode: 405, body: 'Method Not Allowed' }
+    return {
+      statusCode: 405,
+      headers,
+      body: 'Method Not Allowed',
+    }
   }
 
   try {
@@ -49,6 +67,7 @@ exports.handler = async (event) => {
 
     return {
       statusCode: 200,
+      headers,
       body: JSON.stringify({
         message: 'Event created successfully',
         eventId: response.data.id,
@@ -58,6 +77,7 @@ exports.handler = async (event) => {
     console.error('Function error:', error)
     return {
       statusCode: 500,
+      headers,
       body: JSON.stringify({
         message: 'Error creating calendar event',
         error: error.message,

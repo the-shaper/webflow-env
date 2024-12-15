@@ -373,21 +373,20 @@ class FormController {
     console.log('Submitting form data:', formData)
 
     try {
-      console.log(
-        'Sending request to:',
-        '/.netlify/functions/create-calendar-event'
-      )
+      const functionUrl =
+        window.location.hostname === 'localhost'
+          ? '/.netlify/functions/create-calendar-event'
+          : 'https://webflow-env-git.netlify.app/.netlify/functions/create-calendar-event'
 
-      const response = await fetch(
-        '/.netlify/functions/create-calendar-event',
-        {
-          method: 'POST',
-          body: JSON.stringify(formData),
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      )
+      console.log('Sending request to:', functionUrl)
+
+      const response = await fetch(functionUrl, {
+        method: 'POST',
+        body: JSON.stringify(formData),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
 
       // Log the raw response for debugging
       const responseText = await response.text()
