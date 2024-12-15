@@ -14,16 +14,20 @@
 - [x] Corregir jerarquía de colores (botones, links, etc)
 - [ ] Conectar formulario de contacto a un flujo real
 - [x] Agregar glitch de calculadora en la resta del cero
-- [ ] Corregir como se ve la fecha en movil
+- [x] Corregir como se ve la fecha en movil
 - [x] Crear CTA "aplicar ahora" en la última página
 - [ ] Hacer últimos chequeos de como se transmite la información hacia el e-mail y como se le puede dar formato
 - [ ]
-- [ ]
-- [ ]
-- [ ]
-- [ ]
-- [ ]
-- [ ]
-- [ ]
-- [ ]
+
+FORM 2
+
+- [x] Copiar el formulario a formCore2 para simplificar
+- [x] Quita switches
+- [x] Agrega master radio groups
+- [x] Ajusta conditional visibility de servicios: comienza por revisar y ajustar los attributos del html
+- [x] Asegura que el calculo de precios se haga correctamente
+- [x] Revisa el modal de selección de servicios
+- [ ] Conectar calendario a google forms / considera google API vs google sheets to calendar. cual funciona mejor?
+- [ ] Investigar si hay manera (tomando en cuenta a webflow), de hacer un screenshot al modal y enviarlo por correo a okay ok cuando la persona haga submit
+- [ ] Checkout "donde es la boda" – agrega disclaimer
 - [ ]

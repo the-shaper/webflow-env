@@ -19,6 +19,16 @@ class FormController {
     this.nextButton = document.querySelector(
       '[data-form="second"] #f-next-button'
     )
+
+    // Add form submission handler with debug log
+    const form = document.querySelector('[data-form="second"]')
+    console.log('Found form:', !!form) // Debug log
+    if (form) {
+      form.addEventListener('submit', (e) => {
+        console.log('Form submit triggered') // Debug log
+        this.handleSubmit(e)
+      })
+    }
   }
 
   setupNavigation() {
@@ -89,17 +99,28 @@ class FormController {
       if (!formWrapper) return
 
       if (event.target.matches('input[type="radio"]')) {
+        console.log('�������� Radio Change:', {
+          name: event.target.name,
+          value: event.target.value,
+          wrapper: event.target.closest('.coverage-wrapper')?.id,
+          hasPrice: !!event.target.dataset.price,
+          price: event.target.dataset.price,
+        })
+
         // Handle parent group (p1-cob) selections
         if (event.target.closest('#p1-group0')) {
           this.handleParentGroupChange(event.target)
         } else {
-          // Handle other radio groups (photo/video services)
-          const isCalculatorRadio =
-            event.target.name.endsWith('-services') ||
-            event.target.closest('.conditional-group')
+          // Handle service groups within coverage wrappers
+          const coverageWrapper = event.target.closest('.coverage-wrapper')
+          if (coverageWrapper) {
+            const isServiceRadio =
+              event.target.name.includes('-services') ||
+              event.target.closest('.conditional-group')
 
-          if (isCalculatorRadio) {
-            this.handleConditionalGroups(event)
+            if (isServiceRadio) {
+              this.handleConditionalGroups(event)
+            }
           }
         }
       }
@@ -110,11 +131,18 @@ class FormController {
     // Get the target wrapper ID from data-show-group
     const targetWrapperId = radio.dataset.showGroup
 
+    console.log('🔄 Parent Group Change:', {
+      selectedRadio: radio.value,
+      targetWrapper: targetWrapperId,
+      parentGroup: 'p1-group0',
+    })
+
     // Hide all coverage wrappers
     document
       .querySelectorAll('[data-form="second"] .coverage-wrapper')
       .forEach((wrapper) => {
         wrapper.classList.add('off')
+        console.log(`📦 Hiding wrapper: ${wrapper.id}`)
       })
 
     // Show the selected wrapper
@@ -124,6 +152,7 @@ class FormController {
       )
       if (targetWrapper) {
         targetWrapper.classList.remove('off')
+        console.log(`📦 Showing wrapper: ${targetWrapperId}`)
       }
     }
 
@@ -131,6 +160,7 @@ class FormController {
     document
       .querySelectorAll('[data-form="second"] .coverage-wrapper.off')
       .forEach((wrapper) => {
+        console.log(`🔄 Resetting selections in: ${wrapper.id}`)
         wrapper.querySelectorAll('input[type="radio"]').forEach((radio) => {
           if (radio.checked) {
             radio.checked = false
@@ -152,6 +182,16 @@ class FormController {
 
   handleConditionalGroups(event) {
     const radio = event.target
+    const coverageWrapper = radio.closest('.coverage-wrapper')
+    if (!coverageWrapper) return
+
+    console.log('🔍 Handling service selection:', {
+      wrapper: coverageWrapper.id,
+      radioName: radio.name,
+      radioValue: radio.value,
+      price: radio.dataset.price,
+    })
+
     const formFields = radio.closest('[id$="-formfields"]')
     if (!formFields) return
 
@@ -163,7 +203,9 @@ class FormController {
     // Only handle main service radio changes
     if (!isInConditionalGroup) {
       const groupsToReset = Array.from(
-        formFields.querySelectorAll('.boxes-radio-wrapper.conditional-group')
+        coverageWrapper.querySelectorAll(
+          '.boxes-radio-wrapper.conditional-group'
+        )
       )
 
       const groupsToShow = radio.checked
@@ -171,7 +213,7 @@ class FormController {
         : []
 
       requestAnimationFrame(() => {
-        // Reset all groups
+        // Reset all groups within this coverage wrapper
         groupsToReset.forEach((group) => {
           group.classList.remove('is-active')
           this.resetGroupInputs(group)
@@ -179,7 +221,7 @@ class FormController {
 
         // Activate necessary groups
         groupsToShow.forEach((groupId) => {
-          const group = document.getElementById(groupId?.trim())
+          const group = coverageWrapper.querySelector(`#${groupId?.trim()}`)
           if (group) {
             group.classList.add('is-active')
             this.selectDefaultOption(group)
@@ -187,6 +229,17 @@ class FormController {
         })
 
         this.calculator.calculatePagePrices(pageNum)
+
+        // Enable modal button if we have valid selections
+        const modalButton = document.querySelector(
+          '[data-form="second"] .f-modal-button'
+        )
+        if (modalButton) {
+          const hasValidSelections =
+            this.calculator.getPrices().get('total') > 0
+          modalButton.classList.toggle('is-off', !hasValidSelections)
+          modalButton.disabled = !hasValidSelections
+        }
       })
     } else {
       requestAnimationFrame(() => {
@@ -267,6 +320,94 @@ class FormController {
         this.nextButton.classList.remove('is-off')
         this.nextButton.disabled = false
       }
+    }
+  }
+
+  async handleSubmit(event) {
+    event.preventDefault()
+
+    // Add debugging logs
+    console.log('Form submission started')
+
+    // Get the date input and check if it exists
+    const dateInput = document.querySelector('[data-element="datepicker"]')
+    if (!dateInput) {
+      console.error('Date input not found')
+      return
+    }
+    console.log('Date input found:', dateInput.value)
+
+    // Get other form elements with null checks
+    const clientNameInput = document.querySelector(
+      '[name="Nombre-del-Cliente"]'
+    )
+    const partnerNameInput = document.querySelector(
+      '[name="Nombre-de-la-Pareja"]'
+    )
+    const clientEmailInput = document.querySelector('[name="E-Mail-Cliente"]')
+    const serviceRadio = document.querySelector('input[name="p1-cob"]:checked')
+
+    // Debug log all elements
+    console.log('Form elements found:', {
+      dateInput: !!dateInput,
+      clientNameInput: !!clientNameInput,
+      partnerNameInput: !!partnerNameInput,
+      clientEmailInput: !!clientEmailInput,
+      serviceRadio: !!serviceRadio,
+    })
+
+    // Check if all required elements exist
+    if (!clientNameInput || !partnerNameInput || !clientEmailInput) {
+      console.error('Required form elements not found')
+      return
+    }
+
+    const formData = {
+      clientName: clientNameInput.value,
+      partnerName: partnerNameInput.value,
+      clientEmail: clientEmailInput.value,
+      serviceName: serviceRadio ? serviceRadio.value : '',
+      eventDate: dateInput.value.split('-').join('/'), // Convert date format
+    }
+
+    console.log('Submitting form data:', formData)
+
+    try {
+      console.log(
+        'Sending request to:',
+        '/.netlify/functions/create-calendar-event'
+      )
+
+      const response = await fetch(
+        '/.netlify/functions/create-calendar-event',
+        {
+          method: 'POST',
+          body: JSON.stringify(formData),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      )
+
+      // Log the raw response for debugging
+      const responseText = await response.text()
+      console.log('Raw response:', responseText)
+
+      let result
+      try {
+        result = JSON.parse(responseText)
+      } catch (e) {
+        console.error('Failed to parse response as JSON:', responseText)
+        throw new Error('Invalid response from server')
+      }
+
+      if (!response.ok) {
+        throw new Error(result.message || 'Error creating calendar event')
+      }
+
+      console.log('Calendar event created:', result)
+    } catch (error) {
+      console.error('Error details:', error)
     }
   }
 }

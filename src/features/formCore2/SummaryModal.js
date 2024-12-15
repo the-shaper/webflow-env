@@ -1,5 +1,13 @@
 class SummaryModal {
   constructor() {
+    // First, let's log what we're looking for
+    console.log('🎭 Modal: Looking for elements with selectors:', {
+      background: '[data-form="second"] #modal-background',
+      content: '[data-form="second"] #modal-content',
+      priceWrapper: '[data-form="second"] #pricewrapper',
+      button: '[data-form="second"] .f-modal-button',
+    })
+
     this.modalBackground = document.querySelector(
       '[data-form="second"] #modal-background'
     )
@@ -12,6 +20,16 @@ class SummaryModal {
     this.modalButton = document.querySelector(
       '[data-form="second"] .f-modal-button'
     )
+
+    // Then log what we found
+    console.log('🎭 Modal: Found elements:', {
+      background: this.modalBackground?.id || 'not found',
+      content: this.modalContent?.id || 'not found',
+      priceWrapper: this.priceWrapper?.id || 'not found',
+      button: this.modalButton?.className || 'not found',
+      html: document.querySelector('[data-form="second"]')?.innerHTML,
+    })
+
     this.setupListeners()
   }
 
@@ -19,6 +37,11 @@ class SummaryModal {
     // Setup open button
     if (this.modalButton) {
       this.modalButton.addEventListener('click', (e) => {
+        console.log('🎭 Modal: Button clicked', {
+          isOff: this.modalButton.classList.contains('is-off'),
+          disabled: this.modalButton.disabled,
+        })
+
         if (this.modalButton.classList.contains('is-off')) {
           e.preventDefault()
           e.stopPropagation()
@@ -33,91 +56,105 @@ class SummaryModal {
       '[data-form="second"] #close-modal-button'
     )
     if (closeButton) {
-      closeButton.addEventListener('click', () => this.close())
-    }
-
-    // Setup background click to close
-    if (this.modalBackground) {
-      this.modalBackground.addEventListener('click', (event) => {
-        if (event.target === this.modalBackground) {
-          this.close()
-        }
+      closeButton.addEventListener('click', () => {
+        console.log('🎭 Modal: Close button clicked')
+        this.close()
       })
     }
+
+    console.log('🎭 Modal: Listeners setup complete', {
+      hasCloseButton: !!closeButton,
+    })
   }
 
   updateAndOpen() {
+    console.log('🎭 Modal: Updating and opening...')
     this.update()
     this.open()
   }
 
   update() {
-    if (!this.modalContent) return
+    console.log('🎭 Modal: Starting update')
+    if (!this.modalContent) {
+      console.warn('⚠️ Modal: No modal content element found')
+      return
+    }
 
     // Clear existing content
     this.modalContent.innerHTML =
       '<h3 class="modal-main-title">Resumen de tu Paquete</h3>'
 
-    // Get all form pages
-    const formPages = document.querySelectorAll('[data-form="second"] .f-page')
+    // Get the active coverage wrapper
+    const activeWrapper = document.querySelector(
+      '[data-form="second"] .coverage-wrapper:not(.off)'
+    )
+    if (!activeWrapper) {
+      console.warn('⚠️ Modal: No active coverage wrapper found')
+      return
+    }
 
-    formPages.forEach((page) => {
-      const formFields = page.querySelector('[id$="-formfields"]')
-      const pageTotal = page.querySelector('[id$="-totalprice"]')
-
-      if (!formFields || !pageTotal || pageTotal.textContent === '$0') return
-
-      // Create page wrapper
-      const pageWrapper = document.createElement('div')
-      pageWrapper.className = 'formPage-data-wrapper'
-
-      // Add page title
-      const titleElement = document.createElement('h4')
-      titleElement.className = 'modal-page-title'
-      const pageTitle = page.querySelector('h3')
-      titleElement.textContent = pageTitle ? pageTitle.textContent : ''
-      pageWrapper.appendChild(titleElement)
-
-      // Get selections organized by type
-      const selections = this.getPageSelections(formFields)
-
-      // Add main service if exists
-      if (selections.main) {
-        this.addServiceSection(pageWrapper, selections.main)
-      }
-
-      // Create photo services section if exists
-      if (selections.photo.length > 0) {
-        const photoWrapper = document.createElement('div')
-        photoWrapper.className = 'service-category-wrapper photo'
-        const photoTitle = document.createElement('h5')
-        photoTitle.className = 'service-category-title'
-        photoTitle.textContent = 'Detalles de la Fotografía'
-        photoWrapper.appendChild(photoTitle)
-
-        selections.photo.forEach((service) => {
-          this.addServiceSection(photoWrapper, service)
-        })
-        pageWrapper.appendChild(photoWrapper)
-      }
-
-      // Create video services section if exists
-      if (selections.video.length > 0) {
-        const videoWrapper = document.createElement('div')
-        videoWrapper.className = 'service-category-wrapper video'
-        const videoTitle = document.createElement('h5')
-        videoTitle.className = 'service-category-title'
-        videoTitle.textContent = 'Detalles del Video'
-        videoWrapper.appendChild(videoTitle)
-
-        selections.video.forEach((service) => {
-          this.addServiceSection(videoWrapper, service)
-        })
-        pageWrapper.appendChild(videoWrapper)
-      }
-
-      this.modalContent.appendChild(pageWrapper)
+    console.log('📦 Modal: Active wrapper:', {
+      id: activeWrapper.id,
+      hasServices: !!activeWrapper.querySelector(
+        'input[name$="-services"]:checked'
+      ),
+      activeGroups: activeWrapper.querySelectorAll(
+        '.conditional-group.is-active'
+      ).length,
     })
+
+    // Create wrapper for this coverage section
+    const coverageWrapper = document.createElement('div')
+    coverageWrapper.className = 'formPage-data-wrapper'
+
+    // Add coverage title
+    const titleElement = document.createElement('h4')
+    titleElement.className = 'modal-page-title'
+    const coverageTitle = document.querySelector(
+      '[data-form="second"] #p1-group0 input[type="radio"]:checked'
+    )
+    titleElement.textContent = coverageTitle ? coverageTitle.value : ''
+    coverageWrapper.appendChild(titleElement)
+
+    // Get selections organized by type
+    const selections = this.getPageSelections(activeWrapper)
+
+    // Add main service if exists
+    if (selections.main) {
+      this.addServiceSection(coverageWrapper, selections.main)
+    }
+
+    // Create photo services section if exists
+    if (selections.photo.length > 0) {
+      const photoWrapper = document.createElement('div')
+      photoWrapper.className = 'service-category-wrapper photo'
+      const photoTitle = document.createElement('h5')
+      photoTitle.className = 'service-category-title'
+      photoTitle.textContent = 'Detalles de la Fotografía'
+      photoWrapper.appendChild(photoTitle)
+
+      selections.photo.forEach((service) => {
+        this.addServiceSection(photoWrapper, service)
+      })
+      coverageWrapper.appendChild(photoWrapper)
+    }
+
+    // Create video services section if exists
+    if (selections.video.length > 0) {
+      const videoWrapper = document.createElement('div')
+      videoWrapper.className = 'service-category-wrapper video'
+      const videoTitle = document.createElement('h5')
+      videoTitle.className = 'service-category-title'
+      videoTitle.textContent = 'Detalles del Video'
+      videoWrapper.appendChild(videoTitle)
+
+      selections.video.forEach((service) => {
+        this.addServiceSection(videoWrapper, service)
+      })
+      coverageWrapper.appendChild(videoWrapper)
+    }
+
+    this.modalContent.appendChild(coverageWrapper)
 
     // Update total price
     if (this.priceWrapper) {
@@ -133,7 +170,7 @@ class SummaryModal {
     }
   }
 
-  getPageSelections(formFields) {
+  getPageSelections(activeWrapper) {
     const selections = {
       main: null,
       photo: [],
@@ -141,8 +178,10 @@ class SummaryModal {
       other: [],
     }
 
+    console.log('🔍 Modal: Getting selections from', activeWrapper.id)
+
     // Get main service selection
-    const mainService = formFields.querySelector(
+    const mainService = activeWrapper.querySelector(
       'input[type="radio"][name$="-services"]:checked'
     )
     if (mainService) {
@@ -150,13 +189,14 @@ class SummaryModal {
         type: 'main-service',
         value: mainService.value,
         price: mainService.closest('.radio-button-field').querySelector('.p2')
-          .textContent,
+          ?.textContent,
         serviceType: this.getServiceType(mainService.name),
       }
+      console.log('📍 Modal: Main service found:', selections.main)
     }
 
     // Get conditional selections from active groups
-    const activeGroups = formFields.querySelectorAll(
+    const activeGroups = activeWrapper.querySelectorAll(
       '.conditional-group.is-active'
     )
     activeGroups.forEach((group) => {
@@ -168,8 +208,10 @@ class SummaryModal {
           value: checkedRadio.value,
           price: checkedRadio
             .closest('.radio-button-field')
-            .querySelector('.p2').textContent,
+            .querySelector('.p2')?.textContent,
         }
+
+        console.log(`✓ Modal: ${serviceType} selection:`, selection)
 
         // Add to appropriate category
         if (serviceType === 'photo-service') {
@@ -192,12 +234,19 @@ class SummaryModal {
   }
 
   open() {
+    console.log('🎭 Modal: Opening modal', {
+      background: this.modalBackground?.style.display,
+    })
     if (this.modalBackground) {
       this.modalBackground.style.display = 'flex'
+      console.log('🎭 Modal: Display set to flex')
+    } else {
+      console.warn('⚠️ Modal: No modal background element found')
     }
   }
 
   close() {
+    console.log('🎭 Modal: Closing modal')
     if (this.modalBackground) {
       this.modalBackground.style.display = 'none'
     }

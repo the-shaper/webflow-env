@@ -39,22 +39,53 @@ class Calculator {
     let sum = 0
     const mainGroup = new Map()
 
-    // First, get the main service radio (if any)
-    const mainServiceRadio = wrapper.querySelector(
-      `input[name="p${pageNum}-services"]:checked`
+    console.log('💰 Starting price calculation:', {
+      pageNum,
+      wrapperId: wrapper.id,
+    })
+
+    // First, find the active coverage wrapper
+    const activeWrapper = wrapper.querySelector('.coverage-wrapper:not(.off)')
+    if (!activeWrapper) {
+      console.log('⚠️ No active coverage wrapper found')
+      return 0
+    }
+
+    console.log('📦 Active wrapper:', activeWrapper.id)
+
+    // Get the main service radio from the active wrapper
+    const mainServiceRadio = activeWrapper.querySelector(
+      'input[type="radio"][name$="-services"]:checked'
     )
 
     if (mainServiceRadio) {
+      const price = parseFloat(mainServiceRadio.dataset.price) || 0
+      console.log('📍 Main service selected:', {
+        value: mainServiceRadio.value,
+        price,
+        name: mainServiceRadio.name,
+        groupId: mainServiceRadio.closest('.radio-button-field')?.id,
+        wrapper: activeWrapper.id,
+      })
+
       mainGroup.set('services', {
         radio: mainServiceRadio,
-        price: parseFloat(mainServiceRadio.dataset.price) || 0,
+        price,
         groupType: 'main',
       })
     }
 
-    // Get ALL active conditional groups
-    const activeGroups = wrapper.querySelectorAll(
+    // Get active conditional groups only from the active wrapper
+    const activeGroups = activeWrapper.querySelectorAll(
       '.conditional-group.is-active'
+    )
+
+    console.log(
+      '👥 Active conditional groups:',
+      Array.from(activeGroups).map((g) => ({
+        id: g.id,
+        parentWrapper: g.closest('.coverage-wrapper')?.id,
+      }))
     )
 
     // Create a Map to store all checked radios by their names
@@ -67,9 +98,16 @@ class Calculator {
       ).find((radio) => radio.checked)
 
       if (checkedRadio) {
+        const price = parseFloat(checkedRadio.dataset.price) || 0
+        console.log('✓ Conditional selection:', {
+          groupId: group.id,
+          value: checkedRadio.value,
+          price,
+        })
+
         checkedRadios.set(checkedRadio.name, {
           radio: checkedRadio,
-          price: parseFloat(checkedRadio.dataset.price) || 0,
+          price,
           groupType: 'conditional',
           groupId: group.id,
         })
@@ -86,13 +124,12 @@ class Calculator {
       sum += data.price
     })
 
-    // Update individual page total
-    const totalElement = document.querySelector(
-      `[data-form="second"] #p${pageNum}-totalprice`
-    )
-    if (totalElement) {
-      totalElement.textContent = this.formatCurrency(sum)
-    }
+    console.log('💵 Final sum for page:', {
+      pageNum,
+      total: sum,
+      mainServicePrice: mainGroup.get('services')?.price || 0,
+      conditionalPrices: Array.from(checkedRadios.values()).map((d) => d.price),
+    })
 
     return sum
   }
