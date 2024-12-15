@@ -46,6 +46,14 @@ exports.handler = async (event) => {
 
     const calendar = google.calendar({ version: 'v3', auth })
 
+    // Add this near the top of your function for debugging
+    console.log('Environment variables:', {
+      hasClientId: !!process.env.CAL_API_TEST,
+      hasClientSecret: !!process.env.CAL_API_SECRET,
+      hasCalendarId: !!process.env.CAL_ID,
+      calendarId: process.env.CAL_ID, // Be careful not to log this in production
+    })
+
     // Create event
     const calendarEvent = {
       summary: `Wedding: ${clientName} & ${partnerName}`,
