@@ -51,11 +51,15 @@ exports.handler = async (event) => {
       throw new Error('Missing required environment variables')
     }
 
-    // Configure auth
+    // Configure auth with service account
     const auth = new google.auth.GoogleAuth({
       credentials: {
-        client_id: process.env.CAL_API_TEST,
-        client_secret: process.env.CAL_API_SECRET,
+        type: 'service_account',
+        project_id: process.env.GOOGLE_PROJECT_ID,
+        private_key_id: process.env.GOOGLE_PRIVATE_KEY_ID,
+        private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+        client_email: process.env.GOOGLE_CLIENT_EMAIL,
+        client_id: process.env.GOOGLE_CLIENT_ID,
       },
       scopes: ['https://www.googleapis.com/auth/calendar.events'],
     })
