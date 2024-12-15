@@ -32,20 +32,29 @@ exports.handler = async (event) => {
     const formData = JSON.parse(event.body)
     console.log('Parsed form data:', formData)
 
-    // Log environment variables early
-    console.log('Environment variables:', {
-      hasClientId: !!process.env.CAL_API_TEST,
-      hasClientSecret: !!process.env.CAL_API_SECRET,
+    // More detailed environment variable logging
+    const envVars = {
+      hasProjectId: !!process.env.GOOGLE_PROJECT_ID,
+      hasPrivateKey: !!process.env.GOOGLE_PRIVATE_KEY,
+      hasPrivateKeyId: !!process.env.GOOGLE_PRIVATE_KEY_ID,
+      hasClientEmail: !!process.env.GOOGLE_CLIENT_EMAIL,
+      hasClientId: !!process.env.GOOGLE_CLIENT_ID,
       hasCalendarId: !!process.env.CAL_ID,
-    })
+      // Log actual values for non-sensitive vars to verify content
+      projectId: process.env.GOOGLE_PROJECT_ID,
+      clientEmail: process.env.GOOGLE_CLIENT_EMAIL,
+      calendarId: process.env.CAL_ID,
+    }
+    console.log('Environment variables check:', envVars)
 
     const { clientName, serviceName, partnerName, clientEmail, eventDate } =
       formData
 
     // Validate required environment variables
     if (
-      !process.env.CAL_API_TEST ||
-      !process.env.CAL_API_SECRET ||
+      !process.env.GOOGLE_PROJECT_ID ||
+      !process.env.GOOGLE_PRIVATE_KEY ||
+      !process.env.GOOGLE_CLIENT_EMAIL ||
       !process.env.CAL_ID
     ) {
       throw new Error('Missing required environment variables')
