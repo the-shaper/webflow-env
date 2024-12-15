@@ -32,8 +32,24 @@ exports.handler = async (event) => {
     const formData = JSON.parse(event.body)
     console.log('Parsed form data:', formData)
 
+    // Log environment variables early
+    console.log('Environment variables:', {
+      hasClientId: !!process.env.CAL_API_TEST,
+      hasClientSecret: !!process.env.CAL_API_SECRET,
+      hasCalendarId: !!process.env.CAL_ID,
+    })
+
     const { clientName, serviceName, partnerName, clientEmail, eventDate } =
       formData
+
+    // Validate required environment variables
+    if (
+      !process.env.CAL_API_TEST ||
+      !process.env.CAL_API_SECRET ||
+      !process.env.CAL_ID
+    ) {
+      throw new Error('Missing required environment variables')
+    }
 
     // Configure auth
     const auth = new google.auth.GoogleAuth({
@@ -44,42 +60,43 @@ exports.handler = async (event) => {
       scopes: ['https://www.googleapis.com/auth/calendar.events'],
     })
 
-    const calendar = google.calendar({ version: 'v3', auth })
+    try {
+      const calendar = google.calendar({ version: 'v3', auth })
 
-    // Add this near the top of your function for debugging
-    console.log('Environment variables:', {
-      hasClientId: !!process.env.CAL_API_TEST,
-      hasClientSecret: !!process.env.CAL_API_SECRET,
-      hasCalendarId: !!process.env.CAL_ID,
-      calendarId: process.env.CAL_ID, // Be careful not to log this in production
-    })
+      // Create event
+      const calendarEvent = {
+        summary: `Wedding: ${clientName} & ${partnerName}`,
+        description: `Service: ${serviceName}\nClient Email: ${clientEmail}`,
+        start: {
+          date: eventDate,
+          timeZone: 'America/Mexico_City',
+        },
+        end: {
+          date: eventDate,
+          timeZone: 'America/Mexico_City',
+        },
+      }
 
-    // Create event
-    const calendarEvent = {
-      summary: `Wedding: ${clientName} & ${partnerName}`,
-      description: `Service: ${serviceName}\nClient Email: ${clientEmail}`,
-      start: {
-        date: eventDate,
-        timeZone: 'America/Mexico_City',
-      },
-      end: {
-        date: eventDate,
-        timeZone: 'America/Mexico_City',
-      },
-    }
+      console.log('Attempting to create calendar event:', calendarEvent)
 
-    const response = await calendar.events.insert({
-      calendarId: process.env.CAL_ID,
-      resource: calendarEvent,
-    })
+      const response = await calendar.events.insert({
+        calendarId: process.env.CAL_ID,
+        resource: calendarEvent,
+      })
 
-    return {
-      statusCode: 200,
-      headers,
-      body: JSON.stringify({
-        message: 'Event created successfully',
-        eventId: response.data.id,
-      }),
+      console.log('Calendar API Response:', response.data)
+
+      return {
+        statusCode: 200,
+        headers,
+        body: JSON.stringify({
+          message: 'Event created successfully',
+          eventId: response.data.id,
+        }),
+      }
+    } catch (calendarError) {
+      console.error('Calendar API Error:', calendarError)
+      throw new Error(`Calendar API Error: ${calendarError.message}`)
     }
   } catch (error) {
     console.error('Function error:', error)
@@ -89,6 +106,7 @@ exports.handler = async (event) => {
       body: JSON.stringify({
         message: 'Error creating calendar event',
         error: error.message,
+        stack: error.stack, // Remove this in production
       }),
     }
   }
