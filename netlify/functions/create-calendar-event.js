@@ -76,16 +76,23 @@ exports.handler = async (event) => {
     try {
       const calendar = google.calendar({ version: 'v3', auth })
 
+      // Convert date from MM/DD/YYYY to YYYY-MM-DD
+      const [month, day, year] = eventDate.split('/')
+      const formattedDate = `${year}-${month.padStart(2, '0')}-${day.padStart(
+        2,
+        '0'
+      )}`
+
       // Create event
       const calendarEvent = {
         summary: `Wedding: ${clientName} & ${partnerName}`,
         description: `Service: ${serviceName}\nClient Email: ${clientEmail}`,
         start: {
-          date: eventDate,
+          date: formattedDate,
           timeZone: 'America/Mexico_City',
         },
         end: {
-          date: eventDate,
+          date: formattedDate,
           timeZone: 'America/Mexico_City',
         },
       }
