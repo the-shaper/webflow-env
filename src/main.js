@@ -6,7 +6,10 @@ import 'flatpickr/dist/themes/dark.css'
 import initializeForm from './features/formCore'
 import initializeForm2 from './features/formCore2'
 import './styles/style.css'
-import initMasonryGrid from './features/Galleries/main-gal.js'
+// import initMasonryGrid from './features/Galleries/main-gal.js'
+import initTabs from './features/Galleries/dynamic-gal.js'
+import initTestimonials from './features/Galleries/testimonials.js'
+import MenuController from './features/ok-home.js'
 
 // Initialize both forms if their respective elements exist
 const mainForm = document.querySelector('[data-form="main"]')
@@ -18,7 +21,16 @@ const secondForm = document.querySelector('[data-form="second"]')
   : null
 
 // Initialize Galleries
-initMasonryGrid()
+// initMasonryGrid()
+
+// Initialize Menu Controller
+document.querySelector('[data-menu-trigger]') && new MenuController()
+
+// Initialize Tabs if elements exist
+document.querySelector('.standard-button-style') && initTabs()
+
+// Initialize Testimonials
+initTestimonials()
 
 // Make calculators available globally
 window.calculator = mainForm?.calculator

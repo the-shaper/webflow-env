@@ -7,6 +7,53 @@
     <title>Vite App</title>
   </head>
   <body>
+    <div class="landing-front-wrapper">
+      <div class="landing-front-content">
+        <!-- Row 1 -->
+        <div class="row row-1">
+          <div class="info-wrapper header">
+            <!-- Close button starts hidden -->
+            <button class="close-menu-btn" data-menu-close>
+              Close Menu
+            </button>
+          </div>
+        </div>
+
+        <!-- Row 2 -->
+        <div class="row row-2">
+          <div class="content-wrapper">
+            <!-- Intro Content -->
+            <div class="info-wrapper intro" data-content="intro">
+              <div class="welcome-message">
+                Welcome to our site
+              </div>
+              <button class="menu-btn" data-menu-trigger>
+                Menu
+              </button>
+            </div>
+
+            <!-- Menu Content -->
+            <div class="modal-menu-wrapper" data-content="menu">
+              <nav class="menu-items">
+                <ul>
+                  <li><a href="#home">Home</a></li>
+                  <li><a href="#about">About</a></li>
+                  <li><a href="#services">Services</a></li>
+                  <li><a href="#contact">Contact</a></li>
+                </ul>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 3 -->
+        <div class="row row-3">
+          <div class="info-wrapper footer">
+            <!-- Footer content -->
+          </div>
+        </div>
+      </div>
+    </div>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>

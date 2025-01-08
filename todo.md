@@ -29,5 +29,60 @@ FORM 2
 - [x] Revisa el modal de selección de servicios
 - [ ] Conectar calendario a google forms / considera google API vs google sheets to calendar. cual funciona mejor?
 - [ ] Investigar si hay manera (tomando en cuenta a webflow), de hacer un screenshot al modal y enviarlo por correo a okay ok cuando la persona haga submit
-- [ ] Checkout "donde es la boda" – agrega disclaimer
-- [ ]
+- [x] Checkout "donde es la boda" – agrega disclaimer
+- [x] Hacer primer conexión con google calendar
+- [ ] Reemplazar el calendario de google con la cuenta de okay ok
+  - Cuales son los pasos?
+    - Entra a google cloud console > create new project > create service account > create key> download json key and replace the env variables
+    - Entrar a netlify y reemplazar environment variables con las de okay ok
+    - Entrar a google calendar y crear un nuevo calendario
+    - Entrar a google calendar y crear un nuevo evento
+- [ ] Agregar phone number a formulario e inyectarlo en google
+
+HOME:
+[x] - construir home y modal
+[x] - Hacer setup de modal menu
+[x] - Hacer scroll-trigger on scroll paral menu
+[ ] - Hacer prueba duplicate page, pero el fondo es un video
+[x] - Hacer version movil
+
+GALLERIES/pages:
+
+[ ] - Boda
+
+- Galería foto + video
+  [ ] - Lifestyle
+- Galería foto + video
+  [ ] - Comercial
+- Galería foto + video
+  [ ] - Eventos
+
+jan 1st
+
+- [x] - hacer setup de layout de minigaleriavideo
+- [x] - hacer setup de layout de cms video
+- [x] - hacer tabs
+
+jan 5th
+
+- [x] - definir layout, links y anchors del title screen
+- [x] - agregar block CTA de paquetes
+- [x] - agregar block links a otros servicios (ó a "nuestra historia")
+
+jan 6th
+
+- [ ] - hacer colección de testimoniales
+- [ ] - agregar sección de testimoniales a galería
+  - [ ] - decidir si agregar links a otras páginas dentro del mismo block de los testimonials (flex-hor) o alargar el chorizo
+
+okay ok plan de ataque:
+
+- lo que vamos a hacer es construir una página madre para las galerías de boda, lifestyle, comercial y eventos.
+- esta página va a tener un menú de tabs para foto y video (investiga como integrarlo para que el código funcione en estas dynamic pages)
+- diseño, considera una posición estratégica para el botón de bookings
+- vamos a crear una colección secundaria para las galerías de videos, ó investigar como hacer una colección de videos
+- visualiza la versión movil
+
+pre-entrega: 10 de enro
+
+- [ ] hacer animación de transición entre foto/video

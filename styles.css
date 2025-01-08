@@ -1,0 +1,40 @@
+.landing-front-wrapper {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.row-2 .content-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.modal-menu-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transform: translateX(100%);
+  opacity: 0;
+}
+
+.close-menu-btn {
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* Basic styling for menu items */
+.menu-items ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.menu-items li {
+  margin: 1rem 0;
+}
