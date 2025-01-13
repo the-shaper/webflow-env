@@ -188,3 +188,19 @@ span.flatpickr-weekday {
 .menu-item-wrapper.item-5:hover {
   background-size: 179%;
 }
+
+/* Add this to your CSS */
+.swiper-slide.team-names {
+  transition: all 0.3s ease;
+  opacity: 0.5;
+  transform: scale(0.8);
+  color: #666;
+  font-size: 16px;
+}
+
+.swiper-slide-active.team-names {
+  opacity: 1;
+  color: var(--OkayWhite);
+  font-size: 20px;
+  transform: scale(1);
+}

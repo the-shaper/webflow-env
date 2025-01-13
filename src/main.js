@@ -7,7 +7,9 @@ import initializeForm from './features/formCore'
 import initializeForm2 from './features/formCore2'
 import './styles/style.css'
 // import initMasonryGrid from './features/Galleries/main-gal.js'
+import initBookingsGallery from './features/Galleries/bookings.js'
 import initTabs from './features/Galleries/dynamic-gal.js'
+import initTeamGallery from './features/Galleries/team.js'
 import initTestimonials from './features/Galleries/testimonials.js'
 import MenuController from './features/ok-home.js'
 
@@ -30,7 +32,14 @@ document.querySelector('[data-menu-trigger]') && new MenuController()
 document.querySelector('.standard-button-style') && initTabs()
 
 // Initialize Testimonials
-initTestimonials()
+document.querySelector('.swiper.is-photos') && initTestimonials()
+
+// Initialize Team Gallery
+document.querySelector('.swiper.team-names') && initTeamGallery()
+
+// Initialize Bookings Gallery
+document.querySelector('.swiper.is-bookings') && initBookingsGallery()
+initBookingsGallery()
 
 // Make calculators available globally
 window.calculator = mainForm?.calculator
