@@ -12,6 +12,7 @@ import initTabs from './features/Galleries/dynamic-gal.js'
 import initTeamGallery from './features/Galleries/team.js'
 import initTestimonials from './features/Galleries/testimonials.js'
 import MenuController from './features/ok-home.js'
+import { setPageName } from './features/staticForms/pageNameField.js'
 
 // Initialize both forms if their respective elements exist
 const mainForm = document.querySelector('[data-form="main"]')
@@ -78,3 +79,6 @@ if (datepickerElement) {
     },
   })
 }
+
+// Add with other initializations
+document.querySelector('form') && setPageName()

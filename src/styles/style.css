@@ -172,12 +172,20 @@ span.flatpickr-weekday {
 
 /* PORTFOLIO PAGES */
 
-.menu-item-wrapper.item-1,
 .menu-item-wrapper.item-2,
 .menu-item-wrapper.item-3,
-.menu-item-wrapper.item-4,
+.menu-item-wrapper.item-4 {
+  background-size: 179%;
+  transition: all 0.15s ease-in-out;
+}
+
 .menu-item-wrapper.item-5 {
-  background-size: 169%;
+  background-size: 177%;
+  transition: all 0.15s ease-in-out;
+}
+
+.menu-item-wrapper.item-1 {
+  background-size: 200%;
   transition: all 0.15s ease-in-out;
 }
 
@@ -186,7 +194,11 @@ span.flatpickr-weekday {
 .menu-item-wrapper.item-3:hover,
 .menu-item-wrapper.item-4:hover,
 .menu-item-wrapper.item-5:hover {
-  background-size: 179%;
+  background-size: 188%;
+}
+
+.menu-item-wrapper.item-1:hover {
+  background-size: 211%;
 }
 
 /* Add this to your CSS */
@@ -203,4 +215,47 @@ span.flatpickr-weekday {
   color: var(--OkayWhite);
   font-size: 20px;
   transform: scale(1);
+}
+
+.swiper.is-bookings {
+  overflow: visible !important;
+}
+
+.booking-content-wrapper.bg-1,
+.booking-content-wrapper.bg-2 {
+  background-size: 188%;
+  background-position: center;
+  transition: background-size 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  background-repeat: no-repeat;
+}
+
+.booking-content-wrapper.bg-1:hover,
+.booking-content-wrapper.bg-2:hover {
+  background-size: 211%;
+}
+
+/* Shine on hover effect for banner columns */
+.menu-item-content-wrapper.is-banner {
+  position: relative;
+}
+
+.menu-item-content-wrapper.is-banner::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    120deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.2) 50%,
+    transparent 70%
+  );
+  background-size: 200% 100%;
+  transition: background-position 0.8s ease-in-out;
+  pointer-events: none;
+  outline: 2px solid red;
+  z-index: 1;
+}
+
+.menu-item-content-wrapper.is-banner:hover::after {
+  background-position: -100% 0;
 }
