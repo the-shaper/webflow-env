@@ -252,7 +252,7 @@ span.flatpickr-weekday {
   background-size: 200% 100%;
   transition: background-position 0.8s ease-in-out;
   pointer-events: none;
-  outline: 2px solid red;
+
   z-index: 1;
 }
 
