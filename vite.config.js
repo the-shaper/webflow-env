@@ -1,32 +1,32 @@
 import { defineConfig } from 'vite'
-import eslintPlugin from 'vite-plugin-eslint'
+import { resolve } from 'path'
 
-// vite.config.js
 export default defineConfig({
-  plugins: [eslintPlugin({ cache: false })],
-  server: {
-    host: 'localhost',
-    cors: '*',
-    hmr: {
-      host: 'localhost',
-      protocol: 'ws',
-    },
-  },
   build: {
-    minify: true,
-    manifest: true,
+    // Generate sourcemaps for better debugging
+    sourcemap: true,
+
+    // Configure the build output
     rollupOptions: {
-      input: './src/main.js',
-      output: {
-        format: 'umd',
-        entryFileNames: 'main.js',
-        esModule: false,
-        compact: true,
-        globals: {
-          jquery: '$',
-        },
+      input: {
+        main: resolve(__dirname, 'src/main.js'),
       },
-      external: ['jquery'],
+      output: {
+        // Ensure proper code splitting and minification
+        format: 'iife',
+        entryFileNames: '[name].js',
+        chunkFileNames: '[name]-[hash].js',
+        assetFileNames: '[name]-[hash][extname]',
+      },
+    },
+
+    // Enable minification
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true,
+      },
     },
   },
 })
