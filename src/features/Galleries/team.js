@@ -26,6 +26,7 @@ export default function initTeamGallery() {
     },
     autoplay: {
       delay: 3000,
+      pauseOnMouseEnter: true,
     },
     speed: 800,
     slideActiveClass: 'swiper-slide-active',
