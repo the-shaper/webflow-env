@@ -25,7 +25,7 @@ export default function initTeamGallery() {
       onlyInViewport: false,
     },
     autoplay: {
-      delay: 3000,
+      delay: 5000,
       pauseOnMouseEnter: true,
     },
     speed: 800,

@@ -86,3 +86,9 @@ okay ok plan de ataque:
 pre-entrega: 10 de enro
 
 - [ ] hacer animación de transición entre foto/video
+
+---
+
+disable accesibility outlines
+slider team pause autoplay on hover
+agregar número de teléfono a formulario
