@@ -3,7 +3,7 @@ const { google } = require('googleapis')
 exports.handler = async (event) => {
   // Add CORS headers
   const headers = {
-    'Access-Control-Allow-Origin': 'https://okokay.webflow.io',
+    'Access-Control-Allow-Origin': 'https://okayok.webflow.io',
     'Access-Control-Allow-Headers': 'Content-Type',
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
   }
