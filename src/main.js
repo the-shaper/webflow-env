@@ -5,6 +5,7 @@ import 'flatpickr/dist/themes/dark.css'
 // Import both form implementations
 import initializeForm from './features/formCore'
 import initializeForm2 from './features/formCore2'
+// Import the new bodaspaqs form initialization function
 import './styles/style.css'
 // import initMasonryGrid from './features/Galleries/main-gal.js'
 import initBookingsGallery from './features/Galleries/bookings.js'
@@ -12,7 +13,10 @@ import initTabs from './features/Galleries/dynamic-gal.js'
 import initTeamGallery from './features/Galleries/team.js'
 import initTestimonials from './features/Galleries/testimonials.js'
 import MenuController from './features/ok-home.js'
+import initializeBodaspaqsForm from './features/staticForms/bodaspaqsform.js'
+import initializeComercialForm from './features/staticForms/comercialForm.js'
 import { setPageName } from './features/staticForms/pageNameField.js'
+// Import the new comercial form initialization function
 
 // Initialize both forms if their respective elements exist
 const mainForm = document.querySelector('[data-form="main"]')
@@ -21,6 +25,16 @@ const mainForm = document.querySelector('[data-form="main"]')
 
 const secondForm = document.querySelector('[data-form="second"]')
   ? initializeForm2()
+  : null
+
+// Initialize the bodaspaqs form if its element exists
+document.querySelector('[data-form="bodaspaqs"]')
+  ? initializeBodaspaqsForm()
+  : null
+
+// Initialize the comercial form if its element exists
+document.querySelector('[data-form="comercial"]')
+  ? initializeComercialForm()
   : null
 
 // Initialize Galleries

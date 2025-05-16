@@ -1,16 +1,16 @@
 // This script handles the visual state for radio buttons within the form
-// marked with the attribute data-form="bodaspaqs".
+// marked with the attribute data-form="comercial".
 // It toggles the 'is-active' class on the radio button field and its children.
 
 /**
  * Updates the visual state ('is-active' class) for a group of radio buttons.
  * @param {HTMLInputElement} radio - The radio button element that was interacted with.
  */
-function updateBodaspaqsRadioVisualState(radio) {
+function updateComercialRadioVisualState(radio) {
   // Get all radios in the same group
   const groupName = radio.name
-  // Find the closest container with the data-form="bodaspaqs" attribute
-  const formWrapper = radio.closest('[data-form="bodaspaqs"]')
+  // Find the closest container with the data-form="comercial" attribute
+  const formWrapper = radio.closest('[data-form="comercial"]')
 
   // If not within the target form wrapper, do nothing
   if (!formWrapper) {
@@ -43,14 +43,14 @@ function updateBodaspaqsRadioVisualState(radio) {
 }
 
 /**
- * Initializes the event listeners for the bodaspaqs form.
+ * Initializes the event listeners for the comercial form.
  */
-function initializeBodaspaqsForm() {
+function initializeComercialForm() {
   // Set up event delegation for click and change events on the document
   // We listen on the document and filter down to our specific form.
   document.addEventListener('click', (event) => {
-    // Check if the click occurred within the data-form="bodaspaqs" container
-    const formWrapper = event.target.closest('[data-form="bodaspaqs"]')
+    // Check if the click occurred within the data-form="comercial" container
+    const formWrapper = event.target.closest('[data-form="comercial"]')
     if (!formWrapper) {
       return // Ignore clicks outside our target form
     }
@@ -71,10 +71,10 @@ function initializeBodaspaqsForm() {
     // update the checked state before we update the visual state.
     setTimeout(() => {
       // The change event listener below is primarily responsible for calling
-      // updateBodaspaqsRadioVisualState, but calling it here too after a click
+      // updateComercialRadioVisualState, but calling it here too after a click
       // provides robustness in case the change event doesn't fire immediately
       // or for scenarios like initial page load states if you were to trigger clicks programmatically.
-      updateBodaspaqsRadioVisualState(radio)
+      updateComercialRadioVisualState(radio)
       // Note: In many cases, the native 'change' event fired after a click
       // will handle the update, potentially making the direct call here redundant
       // depending on browser behavior and Webflow's handling. Keeping it similar
@@ -83,8 +83,8 @@ function initializeBodaspaqsForm() {
   })
 
   document.addEventListener('change', (event) => {
-    // Check if the change occurred within the data-form="bodaspaqs" container
-    const formWrapper = event.target.closest('[data-form="bodaspaqs"]')
+    // Check if the change occurred within the data-form="comercial" container
+    const formWrapper = event.target.closest('[data-form="comercial"]')
     if (!formWrapper) {
       return // Ignore changes outside our target form
     }
@@ -99,71 +99,72 @@ function initializeBodaspaqsForm() {
     // Call the visual state update function for the changed radio button
     // This is the primary trigger for updating the 'is-active' classes
     // whenever a radio button's checked state changes.
-    updateBodaspaqsRadioVisualState(radio)
+    updateComercialRadioVisualState(radio)
 
-    // If your form needs additional logic based on radio changes (like showing/hiding
-    // conditional fields, similar to the conditional groups in RadioManager),
-    // you would add that logic here or call other functions from here.
-    // Since you mentioned this form is simpler, we are only including the visual state update.
+    // If your form needs additional logic based on radio changes, add it here.
+    // For this simpler form, we only handle the visual state.
   })
 
-  // Optional: You might want to run an initial update on page load
-  // to set the correct 'is-active' state based on pre-selected radio buttons
-  // (e.g., if using CMS data to pre-fill the form).
-  // This would involve finding all radio buttons within the form wrapper
-  // and calling updateBodaspaqsRadioVisualState for the checked ones.
+  // Optional: Initial update on page load for pre-selected radios
   /*
   document.addEventListener('DOMContentLoaded', () => {
-    const formWrapper = document.querySelector('[data-form="bodaspaqs"]');
+    const formWrapper = document.querySelector('[data-form="comercial"]');
     if (formWrapper) {
       formWrapper.querySelectorAll('input[type="radio"]').forEach(radio => {
         if (radio.checked) {
-          updateBodaspaqsRadioVisualState(radio);
+          updateComercialRadioVisualState(radio);
         }
       });
     }
   });
   */
 
-  // Get the bodaspaqs form element and add submit listener
-  const bodaspaqsForm = document.querySelector('[data-form="bodaspaqs"]')
-  if (bodaspaqsForm) {
-    bodaspaqsForm.addEventListener('submit', handleBodaspaqsSubmit)
+  // Get the comercial form element and add submit listener
+  const comercialForm = document.querySelector('[data-form="comercial"]')
+  if (comercialForm) {
+    comercialForm.addEventListener('submit', handleComercialSubmit)
   }
 }
 
 /**
- * Handles the submission of the bodaspaqs form.
+ * Handles the submission of the comercial form.
  * @param {Event} event - The submit event.
  */
-async function handleBodaspaqsSubmit(event) {
+async function handleComercialSubmit(event) {
   // Prevent default form submission
   event.preventDefault()
 
   // Collect data using the provided selectors
-  const clientNameInput = document.querySelector('#Nombre-de-la-Pareja-3')
-  const partnerNameInput = document.querySelector('#Nombre-de-la-Pareja-paq')
-  const clientEmailInput = document.querySelector('#E-Mail-Cliente-paq')
+  const clientNameInput = document.querySelector('#Nombre-Del-Cliente-com')
+  const projectNameInput = document.querySelector('#Nombre-del-proyecto-com') // Project Name
+  const clientEmailInput = document.querySelector('#E-mail-cliente-com')
+  const serviceNeedsRadio = document.querySelector(
+    'input[name="Needs-com"]:checked'
+  ) // Checked radio for Service Needs
   const eventDateInput = document.querySelector('[data-element="datepicker"]')
-  const serviceNameElement = document.querySelector('h1') // First h1 for service name
+  const serviceNameElement = document.querySelector('h1') // First h1 for Service Name
 
   // Basic validation
   if (
     !clientNameInput ||
+    !projectNameInput ||
     !clientEmailInput ||
+    !serviceNeedsRadio ||
     !eventDateInput ||
     !serviceNameElement
   ) {
-    console.error('Required form elements not found for bodaspaqs form')
+    console.error('Required form elements not found for comercial form')
     // Optionally show an error message to the user
     return
   }
   if (
     !clientNameInput.value ||
+    !projectNameInput.value ||
     !clientEmailInput.value ||
+    !serviceNeedsRadio.value ||
     !eventDateInput.value
   ) {
-    console.error('Required form fields are empty for bodaspaqs form')
+    console.error('Required form fields are empty for comercial form')
     // Optionally show an error message to the user
     return
   }
@@ -171,14 +172,15 @@ async function handleBodaspaqsSubmit(event) {
   // Construct formData object
   const formData = {
     clientName: clientNameInput.value,
-    partnerName: partnerNameInput ? partnerNameInput.value : '', // Handle optional partner name
+    projectName: projectNameInput.value,
     clientEmail: clientEmailInput.value,
-    serviceName: serviceNameElement.textContent || 'Bodas y Paquetes', // Use h1 content, fallback text
+    serviceNeeds: serviceNeedsRadio.value,
+    serviceName: serviceNameElement.textContent || 'Comercial', // Use h1 content, fallback text
     eventDate: eventDateInput.value.split('-').join('/'), // Format date
-    formType: 'bodaspaqs', // Add a form identifier
+    formType: 'comercial', // Add a form identifier
   }
 
-  console.log('Submitting bodaspaqs form data:', formData)
+  console.log('Submitting comercial form data:', formData)
 
   // Determine function URL
   const functionUrl =
@@ -198,28 +200,27 @@ async function handleBodaspaqsSubmit(event) {
       },
     })
 
-    // Log the raw response for debugging
     const responseText = await response.text()
-    console.log('Raw bodaspaqs response:', responseText)
+    console.log('Raw comercial response:', responseText)
 
     let result
     try {
       result = JSON.parse(responseText)
     } catch (e) {
-      console.error('Failed to parse bodaspaqs response as JSON:', responseText)
+      console.error('Failed to parse comercial response as JSON:', responseText)
       throw new Error('Invalid response from server')
     }
 
     if (!response.ok) {
-      throw new Error(result.message || 'Error submitting bodaspaqs form')
+      throw new Error(result.message || 'Error submitting comercial form')
     }
 
-    console.log('Bodaspaqs form submission successful:', result)
+    console.log('Comercial form submission successful:', result)
     // Handle success (e.g., show a success message, redirect)
     // You will need to determine how success should be handled in your Webflow setup.
     // For now, I'll just log success.
   } catch (error) {
-    console.error('Error submitting bodaspaqs form:', error)
+    console.error('Error submitting comercial form:', error)
     // Handle error (e.g., show an error message)
     // You will need to determine how errors should be handled in your Webflow setup.
     // For now, I'll just log the error.
@@ -227,4 +228,4 @@ async function handleBodaspaqsSubmit(event) {
 }
 
 // Export the initialization function
-export default initializeBodaspaqsForm
+export default initializeComercialForm
