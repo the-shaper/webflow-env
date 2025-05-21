@@ -1,3 +1,10 @@
+[dev]
+  framework = "vite"    # Tells Netlify to use Vite-specific optimizations for dev
+  command = "npm run dev" # Command to start your Vite dev server
+  targetPort = 3000       # Tell Netlify Dev your Vite server is on port 3000
+  port = 8888             # Netlify Dev will serve your site on http://localhost:8888
+  publish = "dist"          # Your Vite build output directory
+
 [build]
   command = "npm run build"
   functions = "netlify/functions"
